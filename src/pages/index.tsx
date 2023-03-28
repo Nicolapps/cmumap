@@ -8,6 +8,11 @@ import { Building, Placement, Room } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
 
+import { InformationCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+
+const showFloor = true;
+
 export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
@@ -19,8 +24,6 @@ export default function Home() {
 
   useEffect(() => {
     fetch('/data/TCS-2.json').then((r) => r.json()).then(({ placement, rooms }) => {
-      console.log(placement);
-      console.log(rooms);
       setPlacement(placement);
       setFloorPlan(rooms);
     });
@@ -46,6 +49,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={styles.main}>
+        <button className={styles['info-button']} type="button" title="Help">
+          <InformationCircleIcon className={styles['info-button-icon']} />
+        </button>
+
         <Map
           token={process.env.NEXT_PUBLIC_MAPKITJS_TOKEN!}
           initialRegion={initialRegion}
@@ -54,6 +61,10 @@ export default function Home() {
           ]}
           allowWheelToZoom
           mapType={MapType.MutedStandard}
+          paddingBottom={showFloor ? 130 : 72}
+          paddingLeft={6}
+          paddingRight={6}
+          paddingTop={10}
         >
           {buildings && buildings.map((building) => (
             <BuildingShape
@@ -70,6 +81,38 @@ export default function Home() {
             />
           )}
         </Map>
+
+        <div className={styles.toolbar}>
+          {showFloor && (
+            <div className={styles['floor-box']}>
+              <div className={styles['floor-box-title']}>
+                <span className={styles['floor-box-roundel']}>
+                  TCS
+                </span>
+                <span className={styles['floor-box-name']}>
+                  TCS Hall
+                </span>
+              </div>
+              <button type="button" className={styles['floor-box-button']} title="Lower floor">
+                <ChevronDownIcon className={styles['floor-box-button-icon']} />
+              </button>
+              <button type="button" className={`${styles['floor-box-button']} ${styles['floor-box-current-floor']}`}>
+                2
+              </button>
+              <button type="button" className={styles['floor-box-button']} title="Upper floor">
+                <ChevronUpIcon className={styles['floor-box-button-icon']} />
+              </button>
+            </div>
+          )}
+
+
+          <div className={styles['search-box']}>
+            <div className={styles['search-icon-wrapper']}>
+              <MagnifyingGlassIcon className={styles['search-icon']} />
+            </div>
+            <input className={styles['search-box-input']} type="search" placeholder="Search" />
+          </div>
+        </div>
       </main>
     </>
   );
