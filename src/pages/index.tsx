@@ -8,8 +8,14 @@ import { Building, Placement, Room } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
 
-import { InformationCircleIcon, MagnifyingGlassIcon, ArrowLeftIcon } from '@heroicons/react/24/solid';
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import {
+  InformationCircleIcon, MagnifyingGlassIcon, ArrowLeftIcon,
+  ChevronUpIcon, ChevronDownIcon,
+} from '@heroicons/react/24/solid';
+
+import {
+  ChevronRightIcon
+} from '@heroicons/react/20/solid';
 
 const showFloor = true;
 
@@ -65,7 +71,7 @@ export default function Home() {
           showsUserLocationControl={true}
           allowWheelToZoom
           mapType={MapType.MutedStandard}
-          paddingBottom={showFloor ? 136 : 72}
+          paddingBottom={showFloor ? 130 : 72}
           paddingLeft={4}
           paddingRight={4}
           paddingTop={10}
@@ -91,11 +97,36 @@ export default function Home() {
           aria-hidden="true"
         />
 
+        <div
+          className={`${styles['search-modal']} ${isSearchOpen ? styles['search-modal-open'] : ''}`}
+          aria-hidden={isSearchOpen ? 'false' : 'true'}
+        >
+          <div className={styles['search-list']}>
+            {buildings && buildings.map((building: Building) => building.code !== 'BH-PH' && (
+              <button
+                type="button"
+                className={styles['search-list-element']}
+                key={building.code}
+              >
+                <span className={styles['floor-roundel']}>
+                  {building.code}
+                </span>
+                <span
+                  className={styles['search-list-element-title']}
+                >
+                  {building.name}
+                </span>
+                <ChevronRightIcon className={styles['search-list-arrow']} />
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
           {showFloor && (
             <div className={styles['floor-box']}>
               <div className={styles['floor-box-title']}>
-                <span className={styles['floor-box-roundel']}>
+                <span className={styles['floor-roundel']}>
                   TCS
                 </span>
                 <span className={styles['floor-box-name']}>
@@ -132,7 +163,6 @@ export default function Home() {
               className={styles['search-box-input']}
               placeholder="Search"
               onFocus={() => setIsSearchOpen(true)}
-              onBlur={() => setIsSearchOpen(false)}
             />
           </div>
         </div>

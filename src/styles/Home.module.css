@@ -32,7 +32,7 @@
   background: transparent;
   border: 0;
   font-size: 20px;
-  padding-left: 58px;
+  padding-left: 64px;
   padding-right: 12px;
 }
 
@@ -49,7 +49,7 @@
   align-items: center;
   justify-content: center;
 
-  width: 58px;
+  width: 64px;
   height: 100%;
 
   pointer-events: none;
@@ -65,7 +65,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 58px;
+  width: 64px;
   height: 100%;
   background: white;
   border: 0;
@@ -123,7 +123,7 @@
   gap: 8px;
 }
 
-.floor-box-roundel {
+.floor-roundel {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -133,6 +133,7 @@
   align-items: center;
   text-align: center;
   font-weight: 700;
+  font-size: .85em;
 }
 
 .floor-box-name {
@@ -198,4 +199,70 @@
 
 .search-modal-background-active {
   opacity: 1;
+}
+
+.search-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  padding: var(--main-ui-padding);
+  padding-top: calc(var(--main-ui-padding) + var(--search-box-height) + var(--main-ui-padding));
+  padding-bottom: 0;
+
+  z-index: 95;
+  transform: translateY(100vh);
+  transition: var(--search-transition-duration) ease-in-out transform;
+}
+
+.search-modal-open {
+  transform: none;
+}
+
+.search-list {
+  background: rgba(255, 255, 255, .8);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  height: 100%;
+
+  overflow-y: auto;
+}
+
+.search-list-element {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  margin: 0;
+  width: 100%;
+  padding: var(--main-ui-padding);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  letter-spacing: -.01em;
+  height: 50px;
+  text-align: left;
+
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+
+  gap: 10px;
+}
+
+.search-list-element:active {
+  background: rgba(0, 0, 0, .05);
+}
+
+.search-list-element-title {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.search-list-arrow {
+  width: 20px;
+  height: 20px;
+  fill: rgba(0, 0, 0, .3);
 }
