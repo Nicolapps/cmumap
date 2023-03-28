@@ -14,7 +14,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import {
-  ChevronRightIcon
+  ChevronRightIcon, EllipsisHorizontalIcon,
 } from '@heroicons/react/20/solid';
 
 const showFloor = true;
@@ -138,6 +138,9 @@ export default function Home() {
               </button>
               <button type="button" className={`${styles['floor-box-button']} ${styles['floor-box-current-floor']}`}>
                 2
+                <span className={styles['floor-box-more']}>
+                  <EllipsisHorizontalIcon className={styles['floor-box-more-icon']} />
+                </span>
               </button>
               <button type="button" className={styles['floor-box-button']} title="Upper floor">
                 <ChevronUpIcon className={styles['floor-box-button-icon']} />
