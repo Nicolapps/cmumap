@@ -17,10 +17,10 @@ export default function BuildingShape({
       <Polygon
         key={`b-${building.code}`}
         points={building.shapes}
-        fillColor="#f3c8c4"
+        fillColor="#9ca3af"
         fillOpacity={1}
-        strokeColor="#df948e"
-        lineWidth={2}
+        strokeColor="#6b7280"
+        lineWidth={1}
         enabled={false}
       />
 
