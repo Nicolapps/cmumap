@@ -1,6 +1,10 @@
 import { latitudeRatio, longitudeRatio, rotate } from '@/geometry';
-import { AbsoluteCoordinate, getRoomTypeDetails, Placement, Room } from '@/types';
-import { Annotation, Coordinate, Marker, Polygon } from 'mapkit-react';
+import {
+  AbsoluteCoordinate, getRoomTypeDetails, Placement, Room, RoomType,
+} from '@/types';
+import {
+  Annotation, Coordinate, Polygon,
+} from 'mapkit-react';
 import React, { useMemo } from 'react';
 import styles from '../styles/FloorPlan.module.css';
 
@@ -9,10 +13,10 @@ interface FloorPlanProps {
   placement: Placement;
 }
 
-const icons = {
-  'elevator': 'M11,1H4A1,1,0,0,0,3,2V13a1,1,0,0,0,1,1h7a1,1,0,0,0,1-1V2A1,1,0,0,0,11,1ZM7.5,12.5l-2-4h4Zm-2-6,2-4,2,4Z',
-  'restroom': 'M3 1.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0ZM11.5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM3.29 4a1 1 0 0 0-.868.504L.566 7.752a.5.5 0 1 0 .868.496l1.412-2.472A345.048 345.048 0 0 0 1 11h2v2.5a.5.5 0 0 0 1 0V11h1v2.5a.5.5 0 0 0 1 0V11h2L6.103 5.687l1.463 2.561a.5.5 0 1 0 .868-.496L6.578 4.504A1 1 0 0 0 5.71 4H3.29ZM9 4.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v4a.5.5 0 0 1-1 0v-4h-1v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1-1 0v-5Z',
-  'stairs': 'M15 1V2H12V4V5H11H9V7V8H8H6V10V11H5H3V13V14H2H0V13H2V11C2 10.4477 2.44772 10 3 10H5V8C5 7.44772 5.44772 7 6 7H8V5C8 4.44772 8.44771 4 9 4H11V2C11 1.44772 11.4477 1 12 1L15 1Z',
+const icons: { [type: string]: string } = {
+  elevator: 'M11,1H4A1,1,0,0,0,3,2V13a1,1,0,0,0,1,1h7a1,1,0,0,0,1-1V2A1,1,0,0,0,11,1ZM7.5,12.5l-2-4h4Zm-2-6,2-4,2,4Z',
+  restroom: 'M3 1.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0ZM11.5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM3.29 4a1 1 0 0 0-.868.504L.566 7.752a.5.5 0 1 0 .868.496l1.412-2.472A345.048 345.048 0 0 0 1 11h2v2.5a.5.5 0 0 0 1 0V11h1v2.5a.5.5 0 0 0 1 0V11h2L6.103 5.687l1.463 2.561a.5.5 0 1 0 .868-.496L6.578 4.504A1 1 0 0 0 5.71 4H3.29ZM9 4.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v4a.5.5 0 0 1-1 0v-4h-1v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1-1 0v-5Z',
+  stairs: 'M15 1V2H12V4V5H11H9V7V8H8H6V10V11H5H3V13V14H2H0V13H2V11C2 10.4477 2.44772 10 3 10H5V8C5 7.44772 5.44772 7 6 7H8V5C8 4.44772 8.44771 4 9 4H11V2C11 1.44772 11.4477 1 12 1L15 1Z',
 };
 
 export default function FloorPlan({ rooms, placement }: FloorPlanProps) {
