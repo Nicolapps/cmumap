@@ -1,0 +1,58 @@
+.marker {
+  --icon-size: 10px;
+  --gutter: 4px;
+  --label-height: 24px;
+
+  display: flex;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  position: relative;
+}
+
+.marker-with-icon {
+  --icon-size: 20px;
+}
+
+.pin {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-with-icon {
+  border-radius: 4px;
+}
+
+.label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: var(--label-height);
+  /* background-color: white; */
+
+  position: absolute;
+  left: calc(var(--icon-size) + var(--gutter));
+  top: calc((var(--icon-size) - var(--label-height)) / 2);
+  
+  font-weight: 400;
+  letter-spacing: .02em;
+  
+  font-size: 14px;
+  text-shadow: 
+    -1px -1px 0px white,
+    0px -1px 0px white,
+    1px -1px 0px white,
+    -1px 0px 0px white,
+    1px 0px 0px white,
+    -1px 1px 0px white,
+    0px 1px 0px white,
+    1px 1px 0px white;
+}
+
+.pin path {
+  fill: white;
+}
