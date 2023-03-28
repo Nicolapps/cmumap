@@ -152,15 +152,17 @@ export default function Home() {
             <div className={styles['search-icon-wrapper']}>
               <MagnifyingGlassIcon className={styles['search-icon']} />
             </div>
-            <button
-              type="button"
-              title="Close"
-              className={`${styles['search-close-button']} ${isSearchOpen ? styles['search-close-button-visible'] : ''}`}
-              aria-hidden={isSearchOpen ? 'false' : 'true'}
-              onClick={() => setIsSearchOpen(false)}
-            >
-              <ArrowLeftIcon className={styles['search-close-icon']} />
-            </button>
+            {isSearchOpen && (
+              <button
+                type="button"
+                title="Close"
+                className={styles['search-close-button']}
+                aria-hidden={isSearchOpen ? 'false' : 'true'}
+                onClick={() => setIsSearchOpen(false)}
+              >
+                <ArrowLeftIcon className={styles['search-close-icon']} />
+              </button>
+            )}
             <input
               type="search"
               className={styles['search-box-input']}
