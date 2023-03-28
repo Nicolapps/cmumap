@@ -7,6 +7,7 @@ import { Map, MapType, PointOfInterestCategory } from 'mapkit-react';
 import { Building, Placement, Room } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
+import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 import {
   InformationCircleIcon, MagnifyingGlassIcon, ArrowLeftIcon,
@@ -25,6 +26,11 @@ export default function Home() {
   const [floorPlan, setFloorPlan] = useState<Room[] | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const windowDimensions = useWindowDimensions();
+  const isDesktop = windowDimensions
+    && windowDimensions.width
+    && windowDimensions.width >= 768;
 
   useEffect(() => {
     fetch('/data/buildings.json').then((r) => r.json()).then((b) => setBuildings(b));
@@ -50,6 +56,8 @@ export default function Home() {
     longitudeDelta: 0.001,
   }), []);
 
+  const mobileBottomPadding = showFloor ? 130 : 72;
+
   return (
     <>
       <Head>
@@ -71,7 +79,7 @@ export default function Home() {
           showsUserLocationControl={true}
           allowWheelToZoom
           mapType={MapType.MutedStandard}
-          paddingBottom={showFloor ? 130 : 72}
+          paddingBottom={isDesktop ? 0 : mobileBottomPadding}
           paddingLeft={4}
           paddingRight={4}
           paddingTop={10}
@@ -124,27 +132,29 @@ export default function Home() {
 
         <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
           {showFloor && (
-            <div className={styles['floor-box']}>
-              <div className={styles['floor-box-title']}>
-                <span className={styles['floor-roundel']}>
-                  TCS
-                </span>
-                <span className={styles['floor-box-name']}>
-                  TCS Hall
-                </span>
+            <div className={styles['floor-box-wrapper']}>
+              <div className={styles['floor-box']}>
+                <div className={styles['floor-box-title']}>
+                  <span className={styles['floor-roundel']}>
+                    TCS
+                  </span>
+                  <span className={styles['floor-box-name']}>
+                    TCS Hall
+                  </span>
+                </div>
+                <button type="button" className={styles['floor-box-button']} title="Lower floor">
+                  <ChevronDownIcon className={styles['floor-box-button-icon']} />
+                </button>
+                <button type="button" className={`${styles['floor-box-button']} ${styles['floor-box-current-floor']}`}>
+                  2
+                  <span className={styles['floor-box-more']}>
+                    <EllipsisHorizontalIcon className={styles['floor-box-more-icon']} />
+                  </span>
+                </button>
+                <button type="button" className={styles['floor-box-button']} title="Upper floor">
+                  <ChevronUpIcon className={styles['floor-box-button-icon']} />
+                </button>
               </div>
-              <button type="button" className={styles['floor-box-button']} title="Lower floor">
-                <ChevronDownIcon className={styles['floor-box-button-icon']} />
-              </button>
-              <button type="button" className={`${styles['floor-box-button']} ${styles['floor-box-current-floor']}`}>
-                2
-                <span className={styles['floor-box-more']}>
-                  <EllipsisHorizontalIcon className={styles['floor-box-more-icon']} />
-                </span>
-              </button>
-              <button type="button" className={styles['floor-box-button']} title="Upper floor">
-                <ChevronUpIcon className={styles['floor-box-button-icon']} />
-              </button>
             </div>
           )}
 
@@ -152,17 +162,15 @@ export default function Home() {
             <div className={styles['search-icon-wrapper']}>
               <MagnifyingGlassIcon className={styles['search-icon']} />
             </div>
-            {isSearchOpen && (
-              <button
-                type="button"
-                title="Close"
-                className={styles['search-close-button']}
-                aria-hidden={isSearchOpen ? 'false' : 'true'}
-                onClick={() => setIsSearchOpen(false)}
-              >
-                <ArrowLeftIcon className={styles['search-close-icon']} />
-              </button>
-            )}
+            <button
+              type="button"
+              title="Close"
+              className={`${styles['search-close-button']} ${isSearchOpen ? styles['search-close-button-visible'] : ''}`}
+              aria-hidden={isSearchOpen ? 'false' : 'true'}
+              onClick={() => setIsSearchOpen(false)}
+            >
+              <ArrowLeftIcon className={styles['search-close-icon']} />
+            </button>
             <input
               type="search"
               className={styles['search-box-input']}
