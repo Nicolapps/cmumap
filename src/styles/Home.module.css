@@ -1,6 +1,10 @@
 .main {
   height: 100%;
   position: relative;
+
+  --main-ui-padding: 12px;
+  --search-box-height: 58px;
+  --search-transition-duration: .3s;
 }
 
 .toolbar {
@@ -9,15 +13,17 @@
   left: 0;
   width: 100%;
   z-index: 100;
-  padding: 12px;
+  padding: var(--main-ui-padding);
+  transition: var(--search-transition-duration) ease-in-out transform;
 }
 
 .search-box {
   position: relative;
   background: white;
-  height: 58px;
+  height: var(--search-box-height);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .search-box-input {
@@ -26,7 +32,7 @@
   background: transparent;
   border: 0;
   font-size: 20px;
-  padding-left: 48px;
+  padding-left: 58px;
   padding-right: 12px;
 }
 
@@ -43,14 +49,48 @@
   align-items: center;
   justify-content: center;
 
-  width: 48px;
+  width: 58px;
   height: 100%;
+
+  pointer-events: none;
 }
 
 .search-icon {
   width: 24px;  
   height: 24px;  
   fill: #a9a9a9;
+}
+
+.search-close-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 58px;
+  height: 100%;
+  background: white;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 16px;
+
+  pointer-events: none;
+  transition: var(--search-transition-duration) ease-in-out opacity;
+  opacity: 0;
+}
+
+.search-close-button-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.search-close-icon {
+  width: 24px;
+  height: 24px;
+  color: #4b5563;
+}
+
+.toolbar-open {
+  transform: translateY(calc(var(--search-box-height) + 2 * var(--main-ui-padding) - 100vh));
 }
 
 .floor-box {
@@ -62,6 +102,12 @@
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   overflow: hidden;
+
+  transition: var(--search-transition-duration) ease-in-out opacity;
+}
+
+.toolbar-open .floor-box {
+  opacity: 0;
 }
 
 .floor-box > :not(:last-child) {
@@ -131,7 +177,25 @@
 }
 
 .info-button-icon {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   fill: #555;
+}
+
+.search-modal-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .5);
+  z-index: 90;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--search-transition-duration) ease-in-out opacity;
+}
+
+.search-modal-background-active {
+  opacity: 1;
 }

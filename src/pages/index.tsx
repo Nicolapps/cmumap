@@ -8,7 +8,7 @@ import { Building, Placement, Room } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
 
-import { InformationCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { InformationCircleIcon, MagnifyingGlassIcon, ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 
 const showFloor = true;
@@ -17,6 +17,8 @@ export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
   const [floorPlan, setFloorPlan] = useState<Room[] | null>(null);
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     fetch('/data/buildings.json').then((r) => r.json()).then((b) => setBuildings(b));
@@ -59,11 +61,13 @@ export default function Home() {
           includedPOICategories={[
             PointOfInterestCategory.PublicTransport,
           ]}
+          showsMapTypeControl={false}
+          showsUserLocationControl={true}
           allowWheelToZoom
           mapType={MapType.MutedStandard}
-          paddingBottom={showFloor ? 130 : 72}
-          paddingLeft={6}
-          paddingRight={6}
+          paddingBottom={showFloor ? 136 : 72}
+          paddingLeft={4}
+          paddingRight={4}
           paddingTop={10}
         >
           {buildings && buildings.map((building) => (
@@ -82,7 +86,12 @@ export default function Home() {
           )}
         </Map>
 
-        <div className={styles.toolbar}>
+        <div
+          className={`${styles['search-modal-background']} ${isSearchOpen ? styles['search-modal-background-active'] : ''}`}
+          aria-hidden="true"
+        />
+
+        <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
           {showFloor && (
             <div className={styles['floor-box']}>
               <div className={styles['floor-box-title']}>
@@ -105,12 +114,26 @@ export default function Home() {
             </div>
           )}
 
-
           <div className={styles['search-box']}>
             <div className={styles['search-icon-wrapper']}>
               <MagnifyingGlassIcon className={styles['search-icon']} />
             </div>
-            <input className={styles['search-box-input']} type="search" placeholder="Search" />
+            <button
+              type="button"
+              title="Close"
+              className={`${styles['search-close-button']} ${isSearchOpen ? styles['search-close-button-visible'] : ''}`}
+              aria-hidden={isSearchOpen ? 'false' : 'true'}
+              onClick={() => setIsSearchOpen(false)}
+            >
+              <ArrowLeftIcon className={styles['search-close-icon']} />
+            </button>
+            <input
+              type="search"
+              className={styles['search-box-input']}
+              placeholder="Search"
+              onFocus={() => setIsSearchOpen(true)}
+              onBlur={() => setIsSearchOpen(false)}
+            />
           </div>
         </div>
       </main>
