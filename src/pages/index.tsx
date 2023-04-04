@@ -59,7 +59,7 @@ export default function Home() {
   const mobileBottomPadding = showFloor ? 130 : 72;
 
   const onRegionChangeEnd = useMapPosition((region, density) => {
-    const newShowFloors = density >= 300_000;
+    const newShowFloors = density >= 500_000;
     setShowFloor(newShowFloors);
     setShowRoomNames(density >= 1_000_000);
 
@@ -68,9 +68,12 @@ export default function Home() {
         latitude: region.centerLatitude,
         longitude: region.centerLongitude,
       };
-      const activeBuilding = buildings?.find((building: Building) => building.hitbox && isInPolygonCoordinates(building.hitbox, center)) ?? null;
+      const centerBuilding = buildings?.find((building: Building) => (
+        building.hitbox
+        && isInPolygonCoordinates(building.hitbox, center)
+      )) ?? null;
 
-      setActiveBuilding(activeBuilding);
+      setActiveBuilding(centerBuilding);
     } else {
       setActiveBuilding(null);
     }
