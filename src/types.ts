@@ -157,6 +157,11 @@ export interface Building {
   comment?: string;
 }
 
+export interface Floor {
+  placement: Placement;
+  rooms: Room[];
+}
+
 export interface TextZone {
   center: AbsoluteCoordinate;
   text: string;

@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import { FeatureVisibility, Map, MapType, PointOfInterestCategory } from 'mapkit-react';
-import { Building, Placement, Room } from '@/types';
+import { Building, Floor, Placement, Room } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
@@ -20,40 +20,31 @@ import {
 
 export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
-  const [placement, setPlacement] = useState<Placement | null>(null);
-  const [floorPlan, setFloorPlan] = useState<Room[] | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [showFloor, setShowFloor] = useState(false);
-  const [showRoomNames, setShowRoomNames] = useState(false);
+  const [showFloor, setShowFloor] = useState(true);
+  const [showRoomNames, setShowRoomNames] = useState(true);
 
   const windowDimensions = useWindowDimensions();
   const isDesktop = windowDimensions
     && windowDimensions.width
     && windowDimensions.width >= 768;
 
-  useEffect(() => {
-    fetch('/data/buildings.json').then((r) => r.json()).then((b) => setBuildings(b));
-  }, []);
+  type FloorMap = { [code: string]: Floor };
+  const [floors, setFloors] = useState<FloorMap>({});
 
   useEffect(() => {
-    fetch('/data/TCS-2.json').then((r) => r.json()).then(({ placement, rooms }) => {
-      setPlacement(placement);
-      setFloorPlan(rooms);
+    fetch('/data/export.json').then((r) => r.json()).then((response) => {
+      setBuildings(response.buildings);
+      setFloors(response.floors);
     });
   }, []);
 
-  // const initialRegion = useMemo(() => ({
-  //   centerLatitude: 40.444,
-  //   centerLongitude: -79.945,
-  //   latitudeDelta: 0.006337455593801167,
-  //   longitudeDelta: 0.011960061265583022,
-  // }), []);
   const initialRegion = useMemo(() => ({
-    centerLatitude: 40.444879,
-    centerLongitude: -79.947156,
-    latitudeDelta: 0.001,
-    longitudeDelta: 0.001,
+    centerLatitude: 40.444,
+    centerLongitude: -79.945,
+    latitudeDelta: 0.006337455593801167,
+    longitudeDelta: 0.011960061265583022,
   }), []);
 
   const mobileBottomPadding = showFloor ? 130 : 72;
@@ -94,13 +85,14 @@ export default function Home() {
             />
           ))}
 
-          {buildings && placement && floorPlan && showFloor && (
-            <FloorPlan
-              rooms={floorPlan}
-              placement={placement}
+          {showFloor && Object.entries(floors).map(([code, floor]) => (
+            code === 'WEH-4' && <FloorPlan
+              key={code}
+              rooms={floor.rooms}
+              placement={floor.placement}
               showRoomNames={showRoomNames}
             />
-          )}
+          ))}
         </Map>
 
         <div
