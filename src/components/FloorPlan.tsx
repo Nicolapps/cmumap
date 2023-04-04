@@ -12,6 +12,7 @@ interface FloorPlanProps {
   rooms: Room[];
   placement: Placement;
   showRoomNames: boolean;
+  isBackground: boolean;
 }
 
 const icons: { [type: string]: string } = {
@@ -20,7 +21,12 @@ const icons: { [type: string]: string } = {
   stairs: 'M15 1V2H12V4V5H11H9V7V8H8H6V10V11H5H3V13V14H2H0V13H2V11C2 10.4477 2.44772 10 3 10H5V8C5 7.44772 5.44772 7 6 7H8V5C8 4.44772 8.44771 4 9 4H11V2C11 1.44772 11.4477 1 12 1L15 1Z',
 };
 
-export default function FloorPlan({ rooms, placement, showRoomNames }: FloorPlanProps) {
+export default function FloorPlan({
+  rooms,
+  placement,
+  showRoomNames,
+  isBackground,
+}: FloorPlanProps) {
   // Compute the center position of the bounding box of the current floor
   // (Will be used as the rotation center)
   const center: (AbsoluteCoordinate | undefined) = useMemo(() => {
@@ -68,6 +74,8 @@ export default function FloorPlan({ rooms, placement, showRoomNames }: FloorPlan
 
         const icon = icons[room.type] ?? null;
 
+        const opacity = isBackground ? 0.7 : 1;
+
         return (
           <React.Fragment key={room.id}>
             <Polygon
@@ -78,30 +86,33 @@ export default function FloorPlan({ rooms, placement, showRoomNames }: FloorPlan
               selected={false}
               enabled={false}
               fillColor={roomColors.background}
-              fillOpacity={1}
+              fillOpacity={opacity}
               strokeColor={roomColors.border}
+              strokeOpacity={opacity}
               lineWidth={1}
             />
-            <Annotation
-              latitude={labelPos.latitude}
-              longitude={labelPos.longitude}
-            >
-              <div className={`${styles.marker} ${icon ? styles['marker-with-icon'] : ''}`}>
-                <div
-                  className={`${styles.pin} ${icon ? styles['pin-with-icon'] : ''}`}
-                  style={{ background: roomColors.primary }}
-                >
-                  {icon && (
-                    <svg xmlns="http://www.w3.org/2000/svg" id="elevator" width="15" height="15" viewBox="0 0 15 15">
-                      <path d={icon} />
-                    </svg>
+            {!isBackground && (
+              <Annotation
+                latitude={labelPos.latitude}
+                longitude={labelPos.longitude}
+              >
+                <div className={`${styles.marker} ${icon ? styles['marker-with-icon'] : ''}`}>
+                  <div
+                    className={`${styles.pin} ${icon ? styles['pin-with-icon'] : ''}`}
+                    style={{ background: roomColors.primary }}
+                  >
+                    {icon && (
+                      <svg xmlns="http://www.w3.org/2000/svg" id="elevator" width="15" height="15" viewBox="0 0 15 15">
+                        <path d={icon} />
+                      </svg>
+                    )}
+                  </div>
+                  {showRoomNames && (
+                    <span className={styles.label}>{room.name}</span>
                   )}
                 </div>
-                {showRoomNames && (
-                  <span className={styles.label}>{room.name}</span>
-                )}
-              </div>
-            </Annotation>
+              </Annotation>
+            )}
           </React.Fragment>
         );
       })}

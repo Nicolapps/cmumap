@@ -62,6 +62,25 @@ export function isInPolygon(vertices: AbsoluteCoordinate[], point: AbsoluteCoord
   return inside;
 }
 
+export function isInPolygonCoordinates(vertices: Coordinate[], point: Coordinate) {
+  const x = point.longitude;
+  const y = point.latitude;
+
+  let inside = false;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const xi = vertices[i].longitude;
+    const yi = vertices[i].latitude;
+    const xj = vertices[j].longitude;
+    const yj = vertices[j].latitude;
+
+    const intersect = ((yi > y) !== (yj > y)) && (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+}
+
 /**
  * Returns the angle in degrees between the center an da point
  */

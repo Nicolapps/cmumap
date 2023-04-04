@@ -155,6 +155,7 @@ export interface Building {
   labelPosition: Coordinate;
   shapes: Coordinate[][];
   comment?: string;
+  hitbox: Coordinate[] | null;
 }
 
 export interface Floor {

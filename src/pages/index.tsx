@@ -3,8 +3,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
-import { FeatureVisibility, Map, MapType, PointOfInterestCategory } from 'mapkit-react';
-import { Building, Floor, Placement, Room } from '@/types';
+import {
+  FeatureVisibility,
+  Map,
+  MapType,
+  PointOfInterestCategory,
+} from 'mapkit-react';
+import { Building, Floor } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
@@ -17,13 +22,17 @@ import {
 import {
   ChevronRightIcon, EllipsisHorizontalIcon,
 } from '@heroicons/react/20/solid';
+import useMapPosition from '@/hooks/useMapPosition';
+import { isInPolygonCoordinates } from '@/geometry';
 
 export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [showFloor, setShowFloor] = useState(true);
-  const [showRoomNames, setShowRoomNames] = useState(true);
+  const [showFloor, setShowFloor] = useState(false);
+  const [showRoomNames, setShowRoomNames] = useState(false);
+
+  const [activeBuilding, setActiveBuilding] = useState<Building | null>(null);
 
   const windowDimensions = useWindowDimensions();
   const isDesktop = windowDimensions
@@ -48,6 +57,24 @@ export default function Home() {
   }), []);
 
   const mobileBottomPadding = showFloor ? 130 : 72;
+
+  const onRegionChangeEnd = useMapPosition((region, density) => {
+    const newShowFloors = density >= 300_000;
+    setShowFloor(newShowFloors);
+    setShowRoomNames(density >= 1_000_000);
+
+    if (newShowFloors) {
+      const center = {
+        latitude: region.centerLatitude,
+        longitude: region.centerLongitude,
+      };
+      const activeBuilding = buildings?.find((building: Building) => building.hitbox && isInPolygonCoordinates(building.hitbox, center)) ?? null;
+
+      setActiveBuilding(activeBuilding);
+    } else {
+      setActiveBuilding(null);
+    }
+  });
 
   return (
     <>
@@ -76,22 +103,26 @@ export default function Home() {
           paddingTop={10}
           showsZoomControl={isDesktop}
           showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
+          onRegionChangeEnd={onRegionChangeEnd}
         >
           {buildings && buildings.map((building) => (
             <BuildingShape
               key={building.code}
               building={building}
-              showName={!showFloor || building.code !== 'TCS'}
+              showName={!showFloor}
             />
           ))}
 
           {showFloor && Object.entries(floors).map(([code, floor]) => (
-            code === 'WEH-4' && <FloorPlan
+            code.endsWith('4') && (
+            <FloorPlan
               key={code}
               rooms={floor.rooms}
               placement={floor.placement}
               showRoomNames={showRoomNames}
+              isBackground={!activeBuilding || !code.startsWith(activeBuilding?.code)}
             />
+            )
           ))}
         </Map>
 
@@ -126,22 +157,22 @@ export default function Home() {
         </div>
 
         <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
-          {showFloor && (
+          {activeBuilding && (
             <div className={styles['floor-box-wrapper']}>
               <div className={styles['floor-box']}>
                 <div className={styles['floor-box-title']}>
                   <span className={styles['floor-roundel']}>
-                    TCS
+                    {activeBuilding.code}
                   </span>
                   <span className={styles['floor-box-name']}>
-                    TCS Hall
+                    {activeBuilding.name}
                   </span>
                 </div>
                 <button type="button" className={styles['floor-box-button']} title="Lower floor">
                   <ChevronDownIcon className={styles['floor-box-button-icon']} />
                 </button>
                 <button type="button" className={`${styles['floor-box-button']} ${styles['floor-box-current-floor']}`}>
-                  2
+                  4
                   <span className={styles['floor-box-more']}>
                     <EllipsisHorizontalIcon className={styles['floor-box-more-icon']} />
                   </span>
