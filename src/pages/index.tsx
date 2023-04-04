@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
-import { Map, MapType, PointOfInterestCategory } from 'mapkit-react';
+import { FeatureVisibility, Map, MapType, PointOfInterestCategory } from 'mapkit-react';
 import { Building, Placement, Room } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlan from '@/components/FloorPlan';
@@ -18,14 +18,14 @@ import {
   ChevronRightIcon, EllipsisHorizontalIcon,
 } from '@heroicons/react/20/solid';
 
-const showFloor = true;
-
 export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
   const [floorPlan, setFloorPlan] = useState<Room[] | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showFloor, setShowFloor] = useState(false);
+  const [showRoomNames, setShowRoomNames] = useState(false);
 
   const windowDimensions = useWindowDimensions();
   const isDesktop = windowDimensions
@@ -76,26 +76,29 @@ export default function Home() {
             PointOfInterestCategory.PublicTransport,
           ]}
           showsMapTypeControl={false}
-          showsUserLocationControl={true}
+          showsUserLocationControl
           allowWheelToZoom
           mapType={MapType.MutedStandard}
           paddingBottom={isDesktop ? 0 : mobileBottomPadding}
           paddingLeft={4}
           paddingRight={4}
           paddingTop={10}
+          showsZoomControl={isDesktop}
+          showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
         >
           {buildings && buildings.map((building) => (
             <BuildingShape
               key={building.code}
               building={building}
-              showName={building.code !== 'TCS'}
+              showName={!showFloor || building.code !== 'TCS'}
             />
           ))}
 
-          {buildings && placement && floorPlan && (
+          {buildings && placement && floorPlan && showFloor && (
             <FloorPlan
               rooms={floorPlan}
               placement={placement}
+              showRoomNames={showRoomNames}
             />
           )}
         </Map>

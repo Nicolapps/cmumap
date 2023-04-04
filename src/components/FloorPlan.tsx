@@ -11,6 +11,7 @@ import styles from '../styles/FloorPlan.module.css';
 interface FloorPlanProps {
   rooms: Room[];
   placement: Placement;
+  showRoomNames: boolean;
 }
 
 const icons: { [type: string]: string } = {
@@ -19,7 +20,7 @@ const icons: { [type: string]: string } = {
   stairs: 'M15 1V2H12V4V5H11H9V7V8H8H6V10V11H5H3V13V14H2H0V13H2V11C2 10.4477 2.44772 10 3 10H5V8C5 7.44772 5.44772 7 6 7H8V5C8 4.44772 8.44771 4 9 4H11V2C11 1.44772 11.4477 1 12 1L15 1Z',
 };
 
-export default function FloorPlan({ rooms, placement }: FloorPlanProps) {
+export default function FloorPlan({ rooms, placement, showRoomNames }: FloorPlanProps) {
   // Compute the center position of the bounding box of the current floor
   // (Will be used as the rotation center)
   const center: (AbsoluteCoordinate | undefined) = useMemo(() => {
@@ -96,7 +97,9 @@ export default function FloorPlan({ rooms, placement }: FloorPlanProps) {
                     </svg>
                   )}
                 </div>
-                <span className={styles.label}>{room.name}</span>
+                {showRoomNames && (
+                  <span className={styles.label}>{room.name}</span>
+                )}
               </div>
             </Annotation>
           </React.Fragment>
