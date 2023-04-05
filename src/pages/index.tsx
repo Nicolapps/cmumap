@@ -1,6 +1,11 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import {
@@ -58,7 +63,9 @@ export default function Home() {
 
   const mobileBottomPadding = showFloor ? 130 : 72;
 
-  const onRegionChangeEnd = useMapPosition((region, density) => {
+  const mapRef = useRef<mapkit.Map | null>(null);
+
+  const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
     const newShowFloors = density >= 500_000;
     setShowFloor(newShowFloors);
     setShowRoomNames(density >= 1_000_000);
@@ -77,7 +84,7 @@ export default function Home() {
     } else {
       setActiveBuilding(null);
     }
-  });
+  }, mapRef);
 
   return (
     <>
@@ -91,6 +98,7 @@ export default function Home() {
         </button>
 
         <Map
+          ref={mapRef}
           token={process.env.NEXT_PUBLIC_MAPKITJS_TOKEN!}
           initialRegion={initialRegion}
           includedPOICategories={[
@@ -106,6 +114,7 @@ export default function Home() {
           paddingTop={10}
           showsZoomControl={isDesktop}
           showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
+          onRegionChangeStart={onRegionChangeStart}
           onRegionChangeEnd={onRegionChangeEnd}
         >
           {buildings && buildings.map((building) => (
