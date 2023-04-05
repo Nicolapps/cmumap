@@ -8,8 +8,8 @@ export interface UseMapPositionHandlers {
   onRegionChangeEnd: () => void;
 }
 
-const UPDATE_PERIOD_MS = 200;
-const MAX_UPDATE_TIME_MS = 3000;
+const UPDATE_PERIOD_MS = 300;
+const MAX_UPDATE_TIME_MS = 5000;
 
 export default function useMapPosition(
   callback: (region: CoordinateRegion, density: number) => void,
@@ -17,11 +17,9 @@ export default function useMapPosition(
 ): UseMapPositionHandlers {
   const timeout = useRef<number | null>(null);
   const iterations = useRef(0);
+  const isUpdating = useRef(false);
 
-  // @TODO Max counter
   const update = () => {
-    console.log('Update! ', iterations.current);
-
     const map = mapRef.current;
     if (!map) return;
 
@@ -45,7 +43,7 @@ export default function useMapPosition(
     iterations.current += 1;
 
     const maxConsecutiveIterations = MAX_UPDATE_TIME_MS / UPDATE_PERIOD_MS;
-    if (iterations.current < maxConsecutiveIterations) {
+    if (isUpdating.current && iterations.current < maxConsecutiveIterations) {
       timeout.current = window.setTimeout(updateAndTimeout, UPDATE_PERIOD_MS);
     }
   };
@@ -57,19 +55,12 @@ export default function useMapPosition(
 
     // Start auto-update
     iterations.current = 0;
+    isUpdating.current = true;
     timeout.current = window.setTimeout(updateAndTimeout, UPDATE_PERIOD_MS);
-    console.log('START', timeout.current);
   };
 
   const onRegionChangeEnd = () => {
-    console.log('End', timeout.current);
-    update();
-
-    // Stop auto-update
-    if (timeout.current !== null) {
-      window.clearTimeout(timeout.current);
-    }
-    timeout.current = null;
+    isUpdating.current = false;
   };
 
   // Clear the timeout
