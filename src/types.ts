@@ -145,22 +145,26 @@ export interface Placement {
   angle: number;
 }
 
+export interface Floor {
+  name: string;
+  ordinal: number;
+}
+
+export interface FloorPlan {
+  placement: Placement;
+  rooms: Room[];
+}
+
 export interface Building {
   code: string;
   name: string;
   osmId: string;
-  floors: string[];
-  floorProgress?: { name: string, done: boolean }[];
-  groundFloor: string | null;
+  floors: Floor[];
+  defaultFloor: string;
   labelPosition: Coordinate;
   shapes: Coordinate[][];
   comment?: string;
   hitbox: Coordinate[] | null;
-}
-
-export interface Floor {
-  placement: Placement;
-  rooms: Room[];
 }
 
 export interface TextZone {

@@ -97,96 +97,6 @@
   transform: translateY(calc(var(--search-box-height) + 2 * var(--main-ui-padding) - 100vh));
 }
 
-.floor-box-wrapper {
-  padding-bottom: 8px;
-  transition: var(--search-transition-duration) ease-in-out opacity;
-}
-
-.floor-box {
-  display: flex;
-  background: rgba(255, 255, 255, .8);
-  backdrop-filter: blur(8px);
-  border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  overflow: hidden;
-}
-
-.toolbar-open .floor-box-wrapper {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.floor-box > :not(:last-child) {
-  border-right: 1px solid rgba(0, 0, 0, .1);
-}
-
-.floor-box-title {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  letter-spacing: -.02em;
-  padding: 6px;
-  gap: 8px;
-}
-
-.floor-roundel {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, .15);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-weight: 700;
-  font-size: .85em;
-}
-
-.floor-box-name {
-  flex: 1;
-}
-
-.floor-box-button {
-  position: relative;
-  width: 50px;
-  background: transparent;
-  appearance: none;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  color: inherit;
-}
-
-.floor-box-button:active {
-  background: rgba(0, 0, 0, .05);
-}
-
-.floor-box-button-icon {
-  width: 24px;
-  height: 24px;
-  fill: #555;
-}
-
-.floor-box-more {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 22px;
-}
-
-.floor-box-more-icon {
-  width: 20px;
-  fill: rgba(0, 0, 0, .3);
-  pointer-events: none;
-}
-
-.floor-box-current-floor {
-  font-weight: 300;
-  font-size: 20px;
-  padding-bottom: 12px;
-}
-
 .info-button {
   position: absolute;
   top: 12px;
@@ -303,17 +213,6 @@
     width: 400px;
     top: 0;
     bottom: auto;
-  }
-
-  .floor-box-wrapper {
-    position: fixed;
-    left: 50%;
-    bottom: 0;
-    width: 100%;
-    padding: var(--main-ui-padding);
-    max-width: 420px;
-    margin-inline: auto;
-    transform: translateX(-50%);
   }
   
   .search-modal-background {

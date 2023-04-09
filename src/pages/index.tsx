@@ -14,21 +14,19 @@ import {
   MapType,
   PointOfInterestCategory,
 } from 'mapkit-react';
-import { Building, Floor } from '@/types';
+import { Building, FloorPlan } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
-import FloorPlan from '@/components/FloorPlan';
+import FloorPlanOverlay from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 import {
   InformationCircleIcon, MagnifyingGlassIcon, ArrowLeftIcon,
-  ChevronUpIcon, ChevronDownIcon,
 } from '@heroicons/react/24/solid';
 
-import {
-  ChevronRightIcon, EllipsisHorizontalIcon,
-} from '@heroicons/react/20/solid';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import useMapPosition from '@/hooks/useMapPosition';
 import { isInPolygonCoordinates } from '@/geometry';
+import FloorSwitcher from '@/components/FloorSwitcher';
 
 export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
@@ -44,7 +42,7 @@ export default function Home() {
     && windowDimensions.width
     && windowDimensions.width >= 768;
 
-  type FloorMap = { [code: string]: Floor };
+  type FloorMap = { [code: string]: FloorPlan };
   const [floors, setFloors] = useState<FloorMap>({});
 
   useEffect(() => {
@@ -112,7 +110,7 @@ export default function Home() {
           paddingLeft={4}
           paddingRight={4}
           paddingTop={10}
-          showsZoomControl={isDesktop}
+          showsZoomControl={!!isDesktop}
           showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
           onRegionChangeStart={onRegionChangeStart}
           onRegionChangeEnd={onRegionChangeEnd}
@@ -126,8 +124,8 @@ export default function Home() {
           ))}
 
           {showFloor && Object.entries(floors).map(([code, floor]) => (
-            code.endsWith('4') && (
-            <FloorPlan
+            code.endsWith('1') && (
+            <FloorPlanOverlay
               key={code}
               rooms={floor.rooms}
               placement={floor.placement}
@@ -154,7 +152,7 @@ export default function Home() {
                 className={styles['search-list-element']}
                 key={building.code}
               >
-                <span className={styles['floor-roundel']}>
+                <span className="floor-roundel">
                   {building.code}
                 </span>
                 <span
@@ -170,30 +168,11 @@ export default function Home() {
 
         <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
           {activeBuilding && (
-            <div className={styles['floor-box-wrapper']}>
-              <div className={styles['floor-box']}>
-                <div className={styles['floor-box-title']}>
-                  <span className={styles['floor-roundel']}>
-                    {activeBuilding.code}
-                  </span>
-                  <span className={styles['floor-box-name']}>
-                    {activeBuilding.name}
-                  </span>
-                </div>
-                <button type="button" className={styles['floor-box-button']} title="Lower floor">
-                  <ChevronDownIcon className={styles['floor-box-button-icon']} />
-                </button>
-                <button type="button" className={`${styles['floor-box-button']} ${styles['floor-box-current-floor']}`}>
-                  4
-                  <span className={styles['floor-box-more']}>
-                    <EllipsisHorizontalIcon className={styles['floor-box-more-icon']} />
-                  </span>
-                </button>
-                <button type="button" className={styles['floor-box-button']} title="Upper floor">
-                  <ChevronUpIcon className={styles['floor-box-button-icon']} />
-                </button>
-              </div>
-            </div>
+            <FloorSwitcher
+              building={activeBuilding}
+              ordinal={0}
+              isToolbarOpen={isSearchOpen}
+            />
           )}
 
           <div className={styles['search-box']}>

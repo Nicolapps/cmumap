@@ -24,3 +24,16 @@ body {
 span {
   cursor: default;
 }
+
+.floor-roundel {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, .15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: .85em;
+}
