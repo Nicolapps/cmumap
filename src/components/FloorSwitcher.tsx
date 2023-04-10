@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-import { Building, Floor } from '@/types';
+import { Building } from '@/types';
 import React from 'react';
 import {
   ChevronUpIcon, ChevronDownIcon,
@@ -118,8 +118,6 @@ export default function FloorSwitcher({
             </span>
           </p>
         )}
-
-
       </div>
     </div>
   );

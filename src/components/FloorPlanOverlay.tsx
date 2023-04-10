@@ -1,6 +1,6 @@
 import { latitudeRatio, longitudeRatio, rotate } from '@/geometry';
 import {
-  AbsoluteCoordinate, FloorPlan, getRoomTypeDetails, Placement, Room, RoomType,
+  AbsoluteCoordinate, FloorPlan, getRoomTypeDetails, Room,
 } from '@/types';
 import {
   Annotation, Coordinate, Polygon,

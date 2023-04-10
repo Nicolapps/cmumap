@@ -135,8 +135,8 @@ export default function Home() {
             />
           ))}
 
-          {showFloor && buildings && buildings.flatMap((building: Building) =>
-            building.floors.map((floor: Floor) => {
+          {showFloor && buildings && buildings.flatMap((building: Building) => building
+            .floors.map((floor: Floor) => {
               if (floor.ordinal !== floorOrdinal) return null;
 
               const code = `${building.code}-${floor.name}`;
@@ -187,7 +187,7 @@ export default function Home() {
           {activeBuilding && (
             <FloorSwitcher
               building={activeBuilding}
-              ordinal={floorOrdinal}
+              ordinal={floorOrdinal!}
               isToolbarOpen={isSearchOpen}
               onOrdinalChange={setFloorOrdinal}
             />
