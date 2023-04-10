@@ -101,7 +101,7 @@ export default function FloorPlanOverlay({
               strokeOpacity={opacity}
               lineWidth={1}
             />
-            {!isBackground && (
+            {!isBackground && (showRoomNames || icon) && (
               <Annotation
                 latitude={labelPos.latitude}
                 longitude={labelPos.longitude}
