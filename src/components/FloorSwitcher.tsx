@@ -15,7 +15,7 @@ interface FloorSwitcherProps {
   onOrdinalChange: (newOrdinal: number) => void;
 }
 
-export function getFloorIndexAtOrdinal(building: Building, ordinal: number): number {
+function getFloorIndexAtOrdinal(building: Building, ordinal: number): number {
   let min = 0;
   let max = building.floors.length - 1;
   while (min <= max) {

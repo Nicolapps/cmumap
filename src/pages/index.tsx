@@ -14,7 +14,7 @@ import {
   MapType,
   PointOfInterestCategory,
 } from 'mapkit-react';
-import {Building, Floor, FloorPlan} from '@/types';
+import { Building, Floor, FloorPlan } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
@@ -36,7 +36,7 @@ export default function Home() {
   const [showRoomNames, setShowRoomNames] = useState(false);
 
   const [activeBuilding, setActiveBuilding] = useState<Building | null>(null);
-  const [floorOrdinal, setFloorOrdinal] = useState<number>(0);
+  const [floorOrdinal, setFloorOrdinal] = useState<number | null>(null);
 
   const windowDimensions = useWindowDimensions();
   const isDesktop = windowDimensions
@@ -69,7 +69,7 @@ export default function Home() {
 
     const newShowFloors = density >= 500_000;
     setShowFloor(newShowFloors);
-    setShowRoomNames(density >= 1_000_000);
+    setShowRoomNames(density >= 1_500_000);
 
     if (newShowFloors) {
       const center = {
@@ -82,8 +82,17 @@ export default function Home() {
       )) ?? null;
 
       setActiveBuilding(centerBuilding);
+
+      // Use the default floor
+      if (floorOrdinal === null && centerBuilding && centerBuilding.floors.length > 0) {
+        const defaultFloorOrdinal = centerBuilding.floors
+          .find((floor) => floor.name === centerBuilding.defaultFloor)!
+          .ordinal;
+        setFloorOrdinal(defaultFloorOrdinal);
+      }
     } else {
       setActiveBuilding(null);
+      setFloorOrdinal(null);
     }
   }, mapRef);
 
