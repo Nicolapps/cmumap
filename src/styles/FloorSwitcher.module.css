@@ -95,3 +95,26 @@
   padding: 6px;
   gap: 8px;
 }
+
+.no-floor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 150px;
+  margin: 0;
+  padding: 8px;
+  color: #0f172a;
+}
+
+.no-floor span {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.no-floor-icon {
+  width: 24px;
+  height: 24px;
+  stroke: #475569;
+}

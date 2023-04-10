@@ -5,6 +5,7 @@ import {
   ChevronUpIcon, ChevronDownIcon,
 } from '@heroicons/react/24/solid';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import styles from '@/styles/FloorSwitcher.module.css';
 import clsx from 'clsx';
 
@@ -74,33 +75,51 @@ export default function FloorSwitcher({
             {building.name}
           </span>
         </div>
-        <button
-          type="button"
-          className={styles.button}
-          title="Lower floor"
-          disabled={!canGoDown}
-          onClick={() => onOrdinalChange(lowerFloorOrdinal)}
-        >
-          <ChevronDownIcon className={styles['button-icon']} />
-        </button>
-        <button
-          type="button"
-          className={clsx(styles.button, styles['current-floor'])}
-        >
-          {isFloorValid ? building.floors[floorIndex].name : '—'}
-          <span className={styles.more}>
-            <EllipsisHorizontalIcon className={styles['more-icon']} />
-          </span>
-        </button>
-        <button
-          type="button"
-          className={styles.button}
-          title="Upper floor"
-          disabled={!canGoUp}
-          onClick={() => onOrdinalChange(upperFloorOrdinal)}
-        >
-          <ChevronUpIcon className={styles['button-icon']} />
-        </button>
+
+        {building.floors.length !== 0 && (
+          <>
+            <button
+              type="button"
+              className={styles.button}
+              title="Lower floor"
+              disabled={!canGoDown}
+              onClick={() => onOrdinalChange(lowerFloorOrdinal)}
+            >
+              <ChevronDownIcon className={styles['button-icon']} />
+            </button>
+            <button
+              type="button"
+              className={clsx(styles.button, styles['current-floor'])}
+            >
+              {isFloorValid ? building.floors[floorIndex].name : '—'}
+              <span className={styles.more}>
+                <EllipsisHorizontalIcon className={styles['more-icon']} />
+              </span>
+            </button>
+            <button
+              type="button"
+              className={styles.button}
+              title="Upper floor"
+              disabled={!canGoUp}
+              onClick={() => onOrdinalChange(upperFloorOrdinal)}
+            >
+              <ChevronUpIcon className={styles['button-icon']} />
+            </button>
+          </>
+        )}
+
+        {building.floors.length === 0 && (
+          <p className={styles['no-floor']}>
+            <ExclamationCircleIcon className={styles['no-floor-icon']} />
+            <span>
+              Floor plan
+              <br />
+              not available
+            </span>
+          </p>
+        )}
+
+
       </div>
     </div>
   );
