@@ -17,14 +17,14 @@ export default function BuildingShape({
       <Polygon
         key={`b-${building.code}`}
         points={building.shapes}
-        fillColor="#9ca3af"
+        fillColor={building.floors.length > 0 ? '#9ca3af' : '#6b7280'}
         fillOpacity={1}
         strokeColor="#6b7280"
         lineWidth={1}
         enabled={false}
       />
 
-      {showName && (
+      {(showName || building.floors.length === 0) && (
         <Annotation
           latitude={building.labelPosition.latitude}
           longitude={building.labelPosition.longitude}
