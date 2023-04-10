@@ -14,7 +14,7 @@ import {
   MapType,
   PointOfInterestCategory,
 } from 'mapkit-react';
-import { Building, FloorPlan } from '@/types';
+import {Building, Floor, FloorPlan} from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
@@ -126,17 +126,22 @@ export default function Home() {
             />
           ))}
 
-          {showFloor && Object.entries(floors).map(([code, floor]) => (
-            code.endsWith('1') && (
-            <FloorPlanOverlay
-              key={code}
-              rooms={floor.rooms}
-              placement={floor.placement}
-              showRoomNames={showRoomNames}
-              isBackground={!activeBuilding || !code.startsWith(activeBuilding?.code)}
-            />
-            )
-          ))}
+          {showFloor && buildings && buildings.flatMap((building: Building) =>
+            building.floors.map((floor: Floor) => {
+              if (floor.ordinal !== floorOrdinal) return null;
+
+              const code = `${building.code}-${floor.name}`;
+              const floorPlan = floors[code];
+
+              return floorPlan && (
+                <FloorPlanOverlay
+                  key={code}
+                  floorPlan={floorPlan}
+                  showRoomNames={showRoomNames}
+                  isBackground={building.code !== activeBuilding?.code}
+                />
+              );
+            }))}
         </Map>
 
         <div

@@ -1,6 +1,6 @@
 import { latitudeRatio, longitudeRatio, rotate } from '@/geometry';
 import {
-  AbsoluteCoordinate, getRoomTypeDetails, Placement, Room, RoomType,
+  AbsoluteCoordinate, FloorPlan, getRoomTypeDetails, Placement, Room, RoomType,
 } from '@/types';
 import {
   Annotation, Coordinate, Polygon,
@@ -9,8 +9,7 @@ import React, { useMemo } from 'react';
 import styles from '../styles/FloorPlan.module.css';
 
 interface FloorPlanOverlayProps {
-  rooms: Room[];
-  placement: Placement;
+  floorPlan: FloorPlan;
   showRoomNames: boolean;
   isBackground: boolean;
 }
@@ -32,11 +31,12 @@ const icons: { [type: string]: string } = {
 };
 
 export default function FloorPlanOverlay({
-  rooms,
-  placement,
+  floorPlan,
   showRoomNames,
   isBackground,
 }: FloorPlanOverlayProps) {
+  const { rooms, placement } = floorPlan;
+
   // Compute the center position of the bounding box of the current floor
   // (Will be used as the rotation center)
   const center: (AbsoluteCoordinate | undefined) = useMemo(() => {
