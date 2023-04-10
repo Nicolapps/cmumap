@@ -36,6 +36,7 @@ export default function Home() {
   const [showRoomNames, setShowRoomNames] = useState(false);
 
   const [activeBuilding, setActiveBuilding] = useState<Building | null>(null);
+  const [floorOrdinal, setFloorOrdinal] = useState<number>(0);
 
   const windowDimensions = useWindowDimensions();
   const isDesktop = windowDimensions
@@ -64,6 +65,8 @@ export default function Home() {
   const mapRef = useRef<mapkit.Map | null>(null);
 
   const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
+    // @TODO Set initial floor
+
     const newShowFloors = density >= 500_000;
     setShowFloor(newShowFloors);
     setShowRoomNames(density >= 1_000_000);
@@ -170,8 +173,9 @@ export default function Home() {
           {activeBuilding && (
             <FloorSwitcher
               building={activeBuilding}
-              ordinal={0}
+              ordinal={floorOrdinal}
               isToolbarOpen={isSearchOpen}
+              onOrdinalChange={setFloorOrdinal}
             />
           )}
 

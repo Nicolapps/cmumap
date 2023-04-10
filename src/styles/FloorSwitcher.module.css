@@ -11,16 +11,23 @@
   margin: 0;
   padding: 0;
   color: inherit;
+  color: #555;
 }
 
 .button:active {
+  background: rgba(0, 0, 0, .03);
+}
+
+.button:disabled {
   background: rgba(0, 0, 0, .05);
+  color: #999;
+  cursor: not-allowed;
 }
 
 .button-icon {
   width: 24px;
   height: 24px;
-  fill: #555;
+  fill: currentColor;
 }
 
 .more {

@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { Building, Floor } from '@/types';
 import React from 'react';
 import {
@@ -11,9 +12,54 @@ interface FloorSwitcherProps {
   building: Building;
   ordinal: number;
   isToolbarOpen: boolean;
+  onOrdinalChange: (newOrdinal: number) => void;
 }
 
-export default function FloorSwitcher({ building, ordinal, isToolbarOpen }: FloorSwitcherProps) {
+export function getFloorIndexAtOrdinal(building: Building, ordinal: number): number {
+  let min = 0;
+  let max = building.floors.length - 1;
+  while (min <= max) {
+    const mid = (min + max) >>> 1; // = Math.floor((min + max) / 2)
+
+    const midFloorOrdinal = building.floors[mid].ordinal;
+    if (midFloorOrdinal === ordinal) { // found
+      return mid;
+    }
+
+    if (midFloorOrdinal > ordinal) {
+      max = mid - 1;
+    } else {
+      min = mid + 1;
+    }
+  }
+
+  return ~min;
+}
+
+export default function FloorSwitcher({
+  building,
+  ordinal,
+  isToolbarOpen,
+  onOrdinalChange,
+}: FloorSwitcherProps) {
+  const floorIndex: number = getFloorIndexAtOrdinal(building, ordinal);
+  const isFloorValid = floorIndex >= 0;
+
+  const insertIndex = ~floorIndex;
+  const canGoDown = (isFloorValid ? floorIndex : insertIndex) > 0;
+  const canGoUp = isFloorValid
+    ? floorIndex < building.floors.length - 1
+    : ~floorIndex <= building.floors.length - 1;
+
+  const lowerFloorIndex = isFloorValid
+    ? floorIndex - 1
+    : insertIndex - 1;
+  const lowerFloorOrdinal = building.floors[lowerFloorIndex]?.ordinal;
+  const upperFloorIndex = isFloorValid
+    ? floorIndex + 1
+    : insertIndex;
+  const upperFloorOrdinal = building.floors[upperFloorIndex]?.ordinal;
+
   return (
     <div
       className={clsx(styles.wrapper, isToolbarOpen && styles['toolbar-open'])}
@@ -28,16 +74,31 @@ export default function FloorSwitcher({ building, ordinal, isToolbarOpen }: Floo
             {building.name}
           </span>
         </div>
-        <button type="button" className={styles.button} title="Lower floor">
+        <button
+          type="button"
+          className={styles.button}
+          title="Lower floor"
+          disabled={!canGoDown}
+          onClick={() => onOrdinalChange(lowerFloorOrdinal)}
+        >
           <ChevronDownIcon className={styles['button-icon']} />
         </button>
-        <button type="button" className={clsx(styles.button, styles['current-floor'])}>
-          1
+        <button
+          type="button"
+          className={clsx(styles.button, styles['current-floor'])}
+        >
+          {isFloorValid ? building.floors[floorIndex].name : '—'}
           <span className={styles.more}>
             <EllipsisHorizontalIcon className={styles['more-icon']} />
           </span>
         </button>
-        <button type="button" className={styles.button} title="Upper floor">
+        <button
+          type="button"
+          className={styles.button}
+          title="Upper floor"
+          disabled={!canGoUp}
+          onClick={() => onOrdinalChange(upperFloorOrdinal)}
+        >
           <ChevronUpIcon className={styles['button-icon']} />
         </button>
       </div>
