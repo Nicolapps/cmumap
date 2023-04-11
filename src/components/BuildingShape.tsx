@@ -19,7 +19,7 @@ export default function BuildingShape({
         points={building.shapes}
         fillColor={building.floors.length > 0 ? '#9ca3af' : '#6b7280'}
         fillOpacity={1}
-        strokeColor="#6b7280"
+        strokeColor={building.floors.length > 0 ? '#6b7280' : '#374151'}
         lineWidth={1}
         enabled={false}
       />
