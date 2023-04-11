@@ -75,7 +75,7 @@ export default function Home() {
     router.push(url, undefined, {
       shallow: true,
     });
-  }, [activeBuilding, floorOrdinal]);
+  }, [activeBuilding, currentFloorName, router]);
 
   const initialRegion = useMemo(() => ({
     centerLatitude: 40.444,
