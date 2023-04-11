@@ -26,11 +26,14 @@ import {
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import useMapPosition from '@/hooks/useMapPosition';
 import { isInPolygonCoordinates } from '@/geometry';
-import FloorSwitcher from '@/components/FloorSwitcher';
+import FloorSwitcher, { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
+import { useRouter } from 'next/router';
 
 const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
 
 export default function Home() {
+  const router = useRouter();
+
   const [buildings, setBuildings] = useState<Building[] | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -39,6 +42,8 @@ export default function Home() {
 
   const [activeBuilding, setActiveBuilding] = useState<Building | null>(null);
   const [floorOrdinal, setFloorOrdinal] = useState<number | null>(null);
+  const currentFloorName = (floorOrdinal !== null) && activeBuilding
+    ?.floors[getFloorIndexAtOrdinal(activeBuilding, floorOrdinal)]?.name;
 
   const windowDimensions = useWindowDimensions();
   const isDesktop = windowDimensions
@@ -48,12 +53,29 @@ export default function Home() {
   type FloorMap = { [code: string]: FloorPlan };
   const [floors, setFloors] = useState<FloorMap>({});
 
+  // Load the data from the API
   useEffect(() => {
     fetch(exportFile).then((r) => r.json()).then((response) => {
       setBuildings(response.buildings);
       setFloors(response.floors);
     });
   }, []);
+
+  // Update the URL from the current floor
+  useEffect(() => {
+    let url;
+    if (!activeBuilding) {
+      url = '/';
+    } else if (!currentFloorName) {
+      url = `/${activeBuilding.code}`;
+    } else {
+      url = `/${activeBuilding.code}-${currentFloorName}`;
+    }
+
+    router.push(url, undefined, {
+      shallow: true,
+    });
+  }, [activeBuilding, floorOrdinal]);
 
   const initialRegion = useMemo(() => ({
     centerLatitude: 40.444,
@@ -98,10 +120,20 @@ export default function Home() {
     }
   }, mapRef);
 
+  let title = '';
+  if (activeBuilding) {
+    title += activeBuilding.name;
+    if (currentFloorName) {
+      title += ` ${currentFloorName}`;
+    }
+    title += ' — ';
+  }
+  title += 'CMU Map';
+
   return (
     <>
       <Head>
-        <title>CMU Map</title>
+        <title>{title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={styles.main}>
