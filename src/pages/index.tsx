@@ -28,6 +28,8 @@ import useMapPosition from '@/hooks/useMapPosition';
 import { isInPolygonCoordinates } from '@/geometry';
 import FloorSwitcher from '@/components/FloorSwitcher';
 
+const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
+
 export default function Home() {
   const [buildings, setBuildings] = useState<Building[] | null>(null);
 
@@ -47,7 +49,7 @@ export default function Home() {
   const [floors, setFloors] = useState<FloorMap>({});
 
   useEffect(() => {
-    fetch('/data/export.json').then((r) => r.json()).then((response) => {
+    fetch(exportFile).then((r) => r.json()).then((response) => {
       setBuildings(response.buildings);
       setFloors(response.floors);
     });
