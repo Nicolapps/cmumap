@@ -75,7 +75,8 @@ export default function Home() {
     router.push(url, undefined, {
       shallow: true,
     });
-  }, [activeBuilding, currentFloorName, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeBuilding, currentFloorName]);
 
   const initialRegion = useMemo(() => ({
     centerLatitude: 40.444,
