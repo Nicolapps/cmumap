@@ -92,9 +92,9 @@ export default function Home() {
   const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
     // @TODO Set initial floor
 
-    const newShowFloors = density >= 500_000;
+    const newShowFloors = density >= 200_000;
     setShowFloor(newShowFloors);
-    setShowRoomNames(density >= 1_500_000);
+    setShowRoomNames(density >= 750_000);
 
     if (newShowFloors) {
       const center = {
