@@ -9,12 +9,15 @@ import React, {
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import {
+  Coordinate,
   FeatureVisibility,
   Map,
   MapType,
   PointOfInterestCategory,
 } from 'mapkit-react';
-import { Building, Floor, FloorPlan } from '@/types';
+import {
+  Building, Export, Floor, FloorMap,
+} from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
@@ -33,6 +36,7 @@ const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
 
 export default function Home() {
   const router = useRouter();
+  const mapRef = useRef<mapkit.Map | null>(null);
 
   const [buildings, setBuildings] = useState<Building[] | null>(null);
 
@@ -50,19 +54,72 @@ export default function Home() {
     && windowDimensions.width
     && windowDimensions.width >= 768;
 
-  type FloorMap = { [code: string]: FloorPlan };
   const [floors, setFloors] = useState<FloorMap>({});
+
+  const showBuilding = (newBuilding: Building | null, updateMap: boolean) => {
+    setActiveBuilding(newBuilding);
+    if (newBuilding === null) {
+      return;
+    }
+
+    if (updateMap) {
+      const points: Coordinate[] = newBuilding.shapes.flat();
+      const allLat = points.map((p) => p.latitude);
+      const allLon = points.map((p) => p.longitude);
+
+      mapRef.current?.setRegionAnimated(new mapkit.BoundingRegion(
+        Math.max(...allLat),
+        Math.max(...allLon),
+        Math.min(...allLat),
+        Math.min(...allLon),
+      ).toCoordinateRegion());
+    }
+
+    if (floorOrdinal === null && newBuilding.floors.length > 0) {
+      const defaultFloorOrdinal = newBuilding.floors
+        .find((floor) => floor.name === newBuilding.defaultFloor)!
+        .ordinal;
+      setFloorOrdinal(defaultFloorOrdinal);
+    }
+  };
 
   // Load the data from the API
   useEffect(() => {
-    fetch(exportFile).then((r) => r.json()).then((response) => {
-      setBuildings(response.buildings);
-      setFloors(response.floors);
-    });
+    fetch(exportFile)
+      .then((r) => r.json())
+      .then((response: Export) => {
+        setBuildings(response.buildings);
+        setFloors(response.floors);
+
+        // Handle the URL
+        const slug = router.query?.slug?.[0];
+        const selectedFloor = typeof slug === 'string' && response.floors[slug];
+        console.log('slug', slug);
+        console.log('selected floor', selectedFloor);
+        if (selectedFloor) {
+          const [buildingCode, floorName] = slug.split('-');
+
+          const building = response.buildings.find((b) => b.code === buildingCode)!;
+          showBuilding(building, true);
+          setShowFloor(true);
+          setShowRoomNames(false);
+
+          const { ordinal } = building.floors.find((floor) => floor.name === floorName)!;
+          setFloorOrdinal(ordinal);
+
+          console.log('Showing', building.code, ordinal);
+        } else {
+          // Redirect to the default page
+          router.push('/', undefined, { shallow: true });
+        }
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update the URL from the current floor
   useEffect(() => {
+    if (!buildings) return;
+
     let url;
     if (!activeBuilding) {
       url = '/';
@@ -87,10 +144,8 @@ export default function Home() {
 
   const mobileBottomPadding = showFloor ? 130 : 72;
 
-  const mapRef = useRef<mapkit.Map | null>(null);
-
   const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
-    // @TODO Set initial floor
+    if (!buildings) return;
 
     const newShowFloors = density >= 200_000;
     setShowFloor(newShowFloors);
@@ -101,25 +156,17 @@ export default function Home() {
         latitude: region.centerLatitude,
         longitude: region.centerLongitude,
       };
-      const centerBuilding = buildings?.find((building: Building) => (
+      const centerBuilding = buildings.find((building: Building) => (
         building.hitbox
         && isInPolygonCoordinates(building.hitbox, center)
       )) ?? null;
 
-      setActiveBuilding(centerBuilding);
-
-      // Use the default floor
-      if (floorOrdinal === null && centerBuilding && centerBuilding.floors.length > 0) {
-        const defaultFloorOrdinal = centerBuilding.floors
-          .find((floor) => floor.name === centerBuilding.defaultFloor)!
-          .ordinal;
-        setFloorOrdinal(defaultFloorOrdinal);
-      }
+      showBuilding(centerBuilding, false);
     } else {
       setActiveBuilding(null);
       setFloorOrdinal(null);
     }
-  }, mapRef);
+  }, mapRef, initialRegion);
 
   let title = '';
   if (activeBuilding) {
@@ -252,4 +299,11 @@ export default function Home() {
       </main>
     </>
   );
+}
+
+// Disable SSR
+export async function getServerSideProps() {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
 }

@@ -8,12 +8,13 @@ export interface UseMapPositionHandlers {
   onRegionChangeEnd: () => void;
 }
 
-const UPDATE_PERIOD_MS = 300;
+const UPDATE_PERIOD_MS = 150;
 const MAX_UPDATE_TIME_MS = 5000;
 
 export default function useMapPosition(
   callback: (region: CoordinateRegion, density: number) => void,
   mapRef: MutableRefObject<mapkit.Map | null>,
+  initialRegion: CoordinateRegion,
 ): UseMapPositionHandlers {
   const timeout = useRef<number | null>(null);
   const iterations = useRef(0);
@@ -49,6 +50,12 @@ export default function useMapPosition(
   };
 
   const onRegionChangeStart = () => {
+    const { region } = mapRef.current!;
+    if (
+      Math.abs(region.center.latitude - initialRegion.centerLatitude) < 1e-8
+      && Math.abs(region.center.longitude - initialRegion.centerLongitude) < 1e-8
+    ) return;
+
     if (timeout.current !== null) {
       window.clearTimeout(timeout.current);
     }

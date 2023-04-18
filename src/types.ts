@@ -184,3 +184,10 @@ export interface SVGPathCommand {
   ry?: number;
   xAxisRotation?: number;
 }
+
+export type FloorMap = { [code: string]: FloorPlan };
+
+export interface Export {
+  buildings: Building[];
+  floors: FloorMap;
+}
