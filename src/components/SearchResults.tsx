@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Building, FloorMap } from '@/types';
-import BuildingSearchResults from './BuildingSearchResults';
 import styles from '@/styles/SearchResults.module.css';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import BuildingSearchResults from './BuildingSearchResults';
 
 export interface SearchResultsProps {
   query: string;
