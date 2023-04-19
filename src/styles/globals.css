@@ -35,5 +35,10 @@ span {
   align-items: center;
   text-align: center;
   font-weight: 700;
-  font-size: .85em;
+  font-size: .88em;
+
+  background: #4b5563;
+  color: white;
+  font-weight: 500;
+  border: 1px solid white;
 }
