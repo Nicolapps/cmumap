@@ -250,6 +250,10 @@ export default function Home() {
                 type="button"
                 className={styles['search-list-element']}
                 key={building.code}
+                onClick={() => {
+                  showBuilding(building, true);
+                  setIsSearchOpen(false);
+                }}
               >
                 <span className="floor-roundel">
                   {building.code}
