@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { Building, FloorMap } from '@/types';
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import BuildingSearchResults from './BuildingSearchResults';
+import styles from '@/styles/SearchResults.module.css';
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 export interface SearchResultsProps {
   query: string;
@@ -40,6 +41,13 @@ export default function SearchResults({
           key={building.code}
         />
       ))}
+
+      {filteredBuildings.length === 0 && (
+        <div className={styles['search-not-found']}>
+          <ExclamationCircleIcon className={styles['search-not-found-icon']} />
+          No results found.
+        </div>
+      )}
     </>
   );
 }
