@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import styles from '@/styles/Toolbar.module.css';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import {
-  MagnifyingGlassIcon, ArrowLeftIcon,
+  MagnifyingGlassIcon, ArrowLeftIcon, BuildingLibraryIcon,
 } from '@heroicons/react/24/solid';
 import FloorSwitcher from '@/components/FloorSwitcher';
-import { Building } from '@/types';
+import { Building, FloorMap } from '@/types';
+import SearchResults from './SearchResults';
 
 export interface ToolbarProps {
   buildings: Building[] | null;
+  floorMap: FloorMap;
   activeBuilding: Building | null;
   floorOrdinal: number | null;
   setFloorOrdinal: (newOrdinal: number | null) => void;
@@ -17,6 +19,7 @@ export interface ToolbarProps {
 
 export default function Toolbar({
   buildings,
+  floorMap,
   activeBuilding,
   floorOrdinal,
   setFloorOrdinal,
@@ -36,6 +39,18 @@ export default function Toolbar({
         aria-hidden={isSearchOpen ? 'false' : 'true'}
       >
         <div className={styles['search-list']}>
+          {buildings && (
+            <SearchResults
+              query=""
+              buildings={buildings}
+              floorMap={floorMap}
+              onSelectBuilding={(building: Building) => {
+                showBuilding(building, true);
+                setIsSearchOpen(false);
+              }}
+            />
+          )}
+
           {buildings && buildings.map((building: Building) => building.code !== 'BH-PH' && (
             <button
               type="button"
