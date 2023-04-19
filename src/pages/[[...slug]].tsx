@@ -92,10 +92,8 @@ export default function Home() {
         setFloors(response.floors);
 
         // Handle the URL
-        const slug = router.query?.slug?.[0];
-        const selectedFloor = typeof slug === 'string' && response.floors[slug];
-        console.log('slug', slug);
-        console.log('selected floor', selectedFloor);
+        const slug = (router.query?.slug?.[0] ?? '').toUpperCase();
+        const selectedFloor = response.floors[slug];
         if (selectedFloor) {
           const [buildingCode, floorName] = slug.split('-');
 
@@ -106,8 +104,6 @@ export default function Home() {
 
           const { ordinal } = building.floors.find((floor) => floor.name === floorName)!;
           setFloorOrdinal(ordinal);
-
-          console.log('Showing', building.code, ordinal);
         } else {
           // Redirect to the default page
           router.push('/', undefined, { shallow: true });
