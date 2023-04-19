@@ -26,6 +26,7 @@ export default function Toolbar({
   showBuilding,
 }: ToolbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <>
@@ -41,7 +42,7 @@ export default function Toolbar({
         <div className={styles['search-list']}>
           {buildings && (
             <SearchResults
-              query=""
+              query={searchQuery}
               buildings={buildings}
               floorMap={floorMap}
               onSelectBuilding={(building: Building) => {
@@ -50,28 +51,6 @@ export default function Toolbar({
               }}
             />
           )}
-
-          {buildings && buildings.map((building: Building) => building.code !== 'BH-PH' && (
-            <button
-              type="button"
-              className={styles['search-list-element']}
-              key={building.code}
-              onClick={() => {
-                showBuilding(building, true);
-                setIsSearchOpen(false);
-              }}
-            >
-              <span className="floor-roundel">
-                {building.code}
-              </span>
-              <span
-                className={styles['search-list-element-title']}
-              >
-                {building.name}
-              </span>
-              <ChevronRightIcon className={styles['search-list-arrow']} />
-            </button>
-          ))}
         </div>
       </div>
 
@@ -102,6 +81,8 @@ export default function Toolbar({
             type="search"
             className={styles['search-box-input']}
             placeholder="Search"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
             onFocus={() => setIsSearchOpen(true)}
           />
         </div>

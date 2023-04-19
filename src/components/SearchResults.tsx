@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Building, FloorMap } from '@/types';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import styles from '@/styles/SearchResults.module.css';
+import BuildingSearchResults from './BuildingSearchResults';
 
 export interface SearchResultsProps {
   query: string;
@@ -16,25 +16,29 @@ export default function SearchResults({
   floorMap,
   onSelectBuilding,
 }: SearchResultsProps) {
+  const simplifiedQuery = useMemo(() => query.trim().toLowerCase(), [query]);
+
+  const filteredBuildings = useMemo(() => {
+    if (simplifiedQuery === '') {
+      return buildings;
+    }
+
+    return buildings.filter((b: Building) => (
+      simplifiedQuery.startsWith(b.code.toLowerCase())
+      || b.name.toLowerCase().includes(simplifiedQuery)
+    ));
+  }, [buildings, simplifiedQuery]);
+
   return (
     <>
-      {buildings.map((building: Building) => building.code !== 'BH-PH' && (
-        <button
-          type="button"
-          className={styles['search-list-element']}
+      {filteredBuildings.map((building: Building) => (
+        <BuildingSearchResults
+          query={simplifiedQuery}
+          building={building}
+          floorMap={floorMap}
+          onSelectBuilding={onSelectBuilding}
           key={building.code}
-          onClick={() => onSelectBuilding(building)}
-        >
-          <span className="floor-roundel">
-            {building.code}
-          </span>
-          <span
-            className={styles['search-list-element-title']}
-          >
-            {building.name}
-          </span>
-          <ChevronRightIcon className={styles['search-list-arrow']} />
-        </button>
+        />
       ))}
     </>
   );
