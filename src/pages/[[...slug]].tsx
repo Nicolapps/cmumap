@@ -22,15 +22,13 @@ import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 
-import {
-  InformationCircleIcon, MagnifyingGlassIcon, ArrowLeftIcon,
-} from '@heroicons/react/24/solid';
+import { InformationCircleIcon } from '@heroicons/react/24/solid';
 
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import useMapPosition from '@/hooks/useMapPosition';
 import { isInPolygonCoordinates } from '@/geometry';
-import FloorSwitcher, { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
+import { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
 import { useRouter } from 'next/router';
+import Toolbar from '@/components/Toolbar';
 
 const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
 
@@ -40,7 +38,6 @@ export default function Home() {
 
   const [buildings, setBuildings] = useState<Building[] | null>(null);
 
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showFloor, setShowFloor] = useState(false);
   const [showRoomNames, setShowRoomNames] = useState(false);
 
@@ -230,71 +227,13 @@ export default function Home() {
             }))}
         </Map>
 
-        <div
-          className={`${styles['search-modal-background']} ${isSearchOpen ? styles['search-modal-background-active'] : ''}`}
-          aria-hidden="true"
+        <Toolbar
+          buildings={buildings}
+          activeBuilding={activeBuilding}
+          floorOrdinal={floorOrdinal}
+          setFloorOrdinal={setFloorOrdinal}
+          showBuilding={showBuilding}
         />
-
-        <div
-          className={`${styles['search-modal']} ${isSearchOpen ? styles['search-modal-open'] : ''}`}
-          aria-hidden={isSearchOpen ? 'false' : 'true'}
-        >
-          <div className={styles['search-list']}>
-            {buildings && buildings.map((building: Building) => building.code !== 'BH-PH' && (
-              <button
-                type="button"
-                className={styles['search-list-element']}
-                key={building.code}
-                onClick={() => {
-                  showBuilding(building, true);
-                  setIsSearchOpen(false);
-                }}
-              >
-                <span className="floor-roundel">
-                  {building.code}
-                </span>
-                <span
-                  className={styles['search-list-element-title']}
-                >
-                  {building.name}
-                </span>
-                <ChevronRightIcon className={styles['search-list-arrow']} />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
-          {activeBuilding && (
-            <FloorSwitcher
-              building={activeBuilding}
-              ordinal={floorOrdinal!}
-              isToolbarOpen={isSearchOpen}
-              onOrdinalChange={setFloorOrdinal}
-            />
-          )}
-
-          <div className={styles['search-box']}>
-            <div className={styles['search-icon-wrapper']}>
-              <MagnifyingGlassIcon className={styles['search-icon']} />
-            </div>
-            <button
-              type="button"
-              title="Close"
-              className={`${styles['search-close-button']} ${isSearchOpen ? styles['search-close-button-visible'] : ''}`}
-              aria-hidden={isSearchOpen ? 'false' : 'true'}
-              onClick={() => setIsSearchOpen(false)}
-            >
-              <ArrowLeftIcon className={styles['search-close-icon']} />
-            </button>
-            <input
-              type="search"
-              className={styles['search-box-input']}
-              placeholder="Search"
-              onFocus={() => setIsSearchOpen(true)}
-            />
-          </div>
-        </div>
       </main>
     </>
   );
