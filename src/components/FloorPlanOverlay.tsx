@@ -6,6 +6,7 @@ import {
   Annotation, Coordinate, Polygon,
 } from 'mapkit-react';
 import React, { useMemo } from 'react';
+import clsx from 'clsx';
 import styles from '../styles/FloorPlan.module.css';
 
 interface FloorPlanOverlayProps {
@@ -106,9 +107,17 @@ export default function FloorPlanOverlay({
                 latitude={labelPos.latitude}
                 longitude={labelPos.longitude}
               >
-                <div className={`${styles.marker} ${icon ? styles['marker-with-icon'] : ''}`}>
+                <div
+                  className={clsx(
+                    styles.marker,
+                    icon && styles['marker-with-icon'],
+                  )}
+                >
                   <div
-                    className={`${styles.pin} ${icon ? styles['pin-with-icon'] : ''}`}
+                    className={clsx(
+                      styles.pin,
+                      icon && styles['pin-with-icon'],
+                    )}
                     style={{ background: roomColors.primary }}
                   >
                     {icon && (

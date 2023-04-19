@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styles from '@/styles/Toolbar.module.css';
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import {
-  MagnifyingGlassIcon, ArrowLeftIcon, BuildingLibraryIcon,
+  MagnifyingGlassIcon, ArrowLeftIcon,
 } from '@heroicons/react/24/solid';
 import FloorSwitcher from '@/components/FloorSwitcher';
 import { Building, FloorMap } from '@/types';
+import clsx from 'clsx';
 import SearchResults from './SearchResults';
 
 export interface ToolbarProps {
@@ -31,12 +31,18 @@ export default function Toolbar({
   return (
     <>
       <div
-        className={`${styles['search-modal-background']} ${isSearchOpen ? styles['search-modal-background-active'] : ''}`}
+        className={clsx(
+          styles['search-modal-background'],
+          isSearchOpen && styles['search-modal-background-active'],
+        )}
         aria-hidden="true"
       />
 
       <div
-        className={`${styles['search-modal']} ${isSearchOpen ? styles['search-modal-open'] : ''}`}
+        className={clsx(
+          styles['search-modal'],
+          isSearchOpen && styles['search-modal-open'],
+        )}
         aria-hidden={isSearchOpen ? 'false' : 'true'}
       >
         <div className={styles['search-list']}>
@@ -54,7 +60,12 @@ export default function Toolbar({
         </div>
       </div>
 
-      <div className={`${styles.toolbar} ${isSearchOpen ? styles['toolbar-open'] : ''}`}>
+      <div
+        className={clsx(
+          styles.toolbar,
+          isSearchOpen && styles['toolbar-open'],
+        )}
+      >
         {activeBuilding && (
           <FloorSwitcher
             building={activeBuilding}
@@ -71,7 +82,10 @@ export default function Toolbar({
           <button
             type="button"
             title="Close"
-            className={`${styles['search-close-button']} ${isSearchOpen ? styles['search-close-button-visible'] : ''}`}
+            className={clsx(
+              styles['search-close-button'],
+              isSearchOpen && styles['search-close-button-visible'],
+            )}
             aria-hidden={isSearchOpen ? 'false' : 'true'}
             onClick={() => setIsSearchOpen(false)}
           >

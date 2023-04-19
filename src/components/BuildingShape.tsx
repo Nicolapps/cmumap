@@ -1,6 +1,7 @@
 import React from 'react';
 import { Building } from '@/types';
 import { Annotation, Polygon } from 'mapkit-react';
+import clsx from 'clsx';
 import styles from '../styles/BuildingShape.module.css';
 
 interface BuildingShapeProps {
@@ -29,7 +30,13 @@ export default function BuildingShape({
           latitude={building.labelPosition.latitude}
           longitude={building.labelPosition.longitude}
         >
-          <span className={`${styles.marker} ${building.code.length > 2 ? styles.condensed : ''} ${building.code === 'WWG' ? styles.condensed2 : ''}`}>
+          <span
+            className={clsx(
+              styles.marker,
+              building.code.length > 2 && styles.condensed,
+              building.code === 'WWG' && styles.condensed2,
+            )}
+          >
             {building.code}
           </span>
         </Annotation>
