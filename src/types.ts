@@ -58,7 +58,7 @@ export function getRoomTypeDetails(type: RoomType): RoomTypeDetails {
     case 'workshop':
       return { primary: '#ff7e81', background: '#ffdbdc', border: '#ff7e81' };
     case 'vestibule':
-      return { primary: '#eeeeee', background: '#f0f0f0', border: '#cccccc' };
+      return { primary: '#cecece', background: '#fefefe', border: '#cccccc' };
     case 'restroom':
       return { primary: '#c39dff', background: '#e7dfed', border: '#d6d0db' };
     case 'stairs':

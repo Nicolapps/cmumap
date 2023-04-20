@@ -43,7 +43,7 @@ export default function RoomPin({ room }: RoomPinProps) {
     >
       {showIcon && (
         <svg xmlns="http://www.w3.org/2000/svg" id="elevator" width="15" height="15" viewBox="0 0 15 15">
-          <path d={icon} />
+          <path d={icon} fill={room.type !== 'vestibule' ? 'white' : 'black'} />
         </svg>
       )}
     </div>
