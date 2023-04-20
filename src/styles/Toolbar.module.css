@@ -128,18 +128,28 @@
 }
 
 .search-list {
-  background: rgba(255, 255, 255, .8);
-  backdrop-filter: blur(12px);
+  --search-background: #dedfdf;
+  background: var(--search-background);
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   height: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 100;
+}
 
+.search-list-scroll {
+  height: 100%;
   overflow-y: auto;
 }
 
 /* Desktop layout */
 @media screen and (min-width: 768px) {
+  .search-list {
+    --search-background: #fcfdfb;
+  }
+
   .toolbar {
     width: 400px;
     top: 0;

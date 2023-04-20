@@ -54,18 +54,20 @@ export default function Toolbar({
         aria-hidden={isSearchOpen ? 'false' : 'true'}
       >
         <div className={styles['search-list']}>
-          {buildings && (
-            <SearchResults
-              query={searchQuery}
-              buildings={buildings}
-              floorMap={floorMap}
-              onSelectBuilding={(building: Building) => {
-                onSelectBuilding(building);
-                setSearchQuery('');
-                setIsSearchOpen(false);
-              }}
-            />
-          )}
+          <div className={styles['search-list-scroll']}>
+            {buildings && (
+              <SearchResults
+                query={searchQuery}
+                buildings={buildings}
+                floorMap={floorMap}
+                onSelectBuilding={(building: Building) => {
+                  onSelectBuilding(building);
+                  setSearchQuery('');
+                  setIsSearchOpen(false);
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
 

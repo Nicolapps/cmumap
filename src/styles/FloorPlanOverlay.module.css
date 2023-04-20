@@ -1,5 +1,4 @@
 .marker {
-  --icon-size: 10px;
   --gutter: 4px;
   --label-height: 24px;
 
@@ -9,25 +8,9 @@
   position: relative;
 }
 
-.marker-with-icon {
-  --icon-size: 20px;
-}
-
-.pin {
-  width: var(--icon-size);
-  height: var(--icon-size);
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pin-with-icon {
-  border-radius: 4px;
-}
-
 .label {
+  --icon-size: 10px;
+
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -55,15 +38,11 @@
     1px 1px 0px white;
 }
 
+.label-on-icon {
+  --icon-size: 20px;
+}
+
 .room-number {
   /* High legibility alternates */
   font-feature-settings: 'ss06' on;
-}
-
-.room-name {
-  /* font-style: italic; */
-}
-
-.pin path {
-  fill: white;
 }

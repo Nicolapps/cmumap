@@ -8,6 +8,22 @@ import {
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import styles from '@/styles/BuildingSearchResults.module.css';
 import clsx from 'clsx';
+import RoomPin from './RoomPin';
+
+function titleCase(str: string) {
+  return str.split(' ')
+    .map((word: string) => word.substring(0, 1).toUpperCase() + word.substring(1))
+    .join(' ');
+}
+
+function roomType(room: Room): string {
+  switch (room.type) {
+    case 'study':
+      return 'Study Room';
+    default:
+      return room.type;
+  }
+}
 
 export interface BuildingSearchResultsProps {
   simplifiedQuery: string;
@@ -41,7 +57,7 @@ export default function BuildingSearchResults({
   }, [building, simplifiedQuery, floorMap]);
 
   return (
-    <>
+    <div>
       <button
         type="button"
         className={clsx(
@@ -68,16 +84,30 @@ export default function BuildingSearchResults({
           // onClick={() => onSelectBuilding(building)}
           // @todo
         >
-          <span
-            className={styles['search-list-element-title']}
+          <div className={styles['search-list-element-pin']}>
+            <RoomPin room={room} />
+          </div>
+          <div
+            className={clsx(
+              styles['search-list-element-title'],
+              styles['search-list-element-room'],
+            )}
           >
-            {building.code}
-            -
-            {room.name}
-          </span>
+            <div>
+              <span className={styles['search-room-code']}>
+                {building.code}
+                {' '}
+                {room.name}
+              </span>
+              {room.type !== 'default' && (
+                <span>{` • ${titleCase(roomType(room))}`}</span>
+              )}
+            </div>
+            {room.alias && <div>{room.alias}</div>}
+          </div>
           <ChevronRightIcon className={styles['search-list-arrow']} />
         </button>
       ))}
-    </>
+    </div>
   );
 }
