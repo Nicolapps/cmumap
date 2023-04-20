@@ -39,7 +39,7 @@ export default function SearchResults({
     <>
       {filteredBuildings.map((building: Building) => (
         <BuildingSearchResults
-          query={simplifiedQuery}
+          simplifiedQuery={simplifiedQuery}
           building={building}
           floorMap={floorMap}
           onSelectBuilding={onSelectBuilding}

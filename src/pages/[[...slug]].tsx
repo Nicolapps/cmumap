@@ -229,6 +229,7 @@ export default function Home() {
 
         <Toolbar
           buildings={buildings}
+          floorMap={floors}
           activeBuilding={activeBuilding}
           floorOrdinal={floorOrdinal}
           setFloorOrdinal={setFloorOrdinal}
