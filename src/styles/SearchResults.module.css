@@ -1,4 +1,6 @@
-.search-not-found {
+.search-results:empty::before {
+  content: 'No results found.';
+
   display: flex;
   gap: 4px;
   align-items: center;
@@ -8,9 +10,4 @@
   font-size: 20px;
   font-weight: 300;
   text-align: center;
-}
-
-.search-not-found-icon {
-  width: 24px;
-  height: 24px;
 }

@@ -9,6 +9,7 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import styles from '@/styles/BuildingSearchResults.module.css';
 import clsx from 'clsx';
 import RoomPin from './RoomPin';
+import { simplify } from './SearchResults';
 
 function titleCase(str: string) {
   return str.split(' ')
@@ -38,23 +39,50 @@ export default function BuildingSearchResults({
   floorMap,
   onSelectBuilding,
 }: BuildingSearchResultsProps) {
+  const roomNames: string[] = useMemo(() => (
+    building.floors.flatMap((floor: Floor) => (
+      floorMap[`${building.code}-${floor.name}`]
+        ?.rooms
+        .filter((room: Room) => room.alias)
+        .map((room: Room) => simplify(room.alias!))
+      ?? []
+    ))), [building, floorMap]);
+
   const filteredRooms: Room[] = useMemo(() => {
-    if (simplifiedQuery === '' || !simplifiedQuery.startsWith(building.code.toLowerCase())) {
+    // No query: only show building names
+    if (simplifiedQuery === '') {
       return [];
     }
 
+    // Query for another building
+    const searchForThisBuilding = simplifiedQuery.startsWith(building.code.toLowerCase());
     const queryRoom = simplifiedQuery.substring(building.code.length);
 
     return building.floors.flatMap((floor: Floor) => (
       floorMap[`${building.code}-${floor.name}`]
         ?.rooms
         .filter((room: Room) => (
-          room.name.toLowerCase().startsWith(queryRoom)
-          || (room.name.substring(floor.name.length).toLowerCase()).startsWith(queryRoom)
+          (searchForThisBuilding && (
+            room.name.toLowerCase().startsWith(queryRoom)
+            || (room.name.substring(floor.name.length).toLowerCase()).startsWith(queryRoom)
+          ))
+          || (room.alias && simplify(room.alias).includes(simplifiedQuery))
         ))
       ?? []
     ));
   }, [building, simplifiedQuery, floorMap]);
+
+  const isVisible = useMemo(() => (
+    simplifiedQuery === ''
+    || simplifiedQuery.startsWith(building.code.toLowerCase())
+    || simplify(building.name).includes(simplifiedQuery)
+    || simplify(building.code).includes(simplifiedQuery)
+    || roomNames.some((roomName: string) => roomName.includes(simplifiedQuery))
+  ), [building, simplifiedQuery, roomNames]);
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div>
