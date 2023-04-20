@@ -71,6 +71,9 @@ export default function Home() {
         Math.min(...allLat),
         Math.min(...allLon),
       ).toCoordinateRegion());
+
+      setShowFloor(true);
+      setShowRoomNames(false);
     }
 
     setFloorOrdinal((currentFloorOrdinal) => (
@@ -80,9 +83,6 @@ export default function Home() {
           .ordinal
         : currentFloorOrdinal
     ));
-
-    setShowFloor(true);
-    setShowRoomNames(false);
   };
 
   // Load the data from the API
