@@ -81,6 +81,7 @@ export default function BuildingSearchResults({
         <button
           type="button"
           className={styles['search-list-element']}
+          key={room.id}
           // onClick={() => onSelectBuilding(building)}
           // @todo
         >
