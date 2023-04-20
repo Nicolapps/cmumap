@@ -1,10 +1,9 @@
 /* eslint-disable no-bitwise */
-import { Building } from '@/types';
+import { Building, Floor } from '@/types';
 import React from 'react';
 import {
   ChevronUpIcon, ChevronDownIcon,
 } from '@heroicons/react/24/solid';
-import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import styles from '@/styles/FloorSwitcher.module.css';
 import clsx from 'clsx';
@@ -94,8 +93,18 @@ export default function FloorSwitcher({
               className={clsx(styles.button, styles['current-floor'])}
             >
               {isFloorValid ? building.floors[floorIndex].name : '—'}
-              <span className={styles.more}>
-                <EllipsisHorizontalIcon className={styles['more-icon']} />
+              <span className={styles['ellipsis-indicator']}>
+                {
+                  building.floors.map((floor: Floor) => (
+                    <div
+                      key={floor.ordinal}
+                      className={clsx(
+                        styles['ellipsis-dot'],
+                        floor.ordinal === ordinal && styles['ellipsis-dot-active'],
+                      )}
+                    />
+                  ))
+                }
               </span>
             </button>
             <button
