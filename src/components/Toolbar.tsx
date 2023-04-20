@@ -58,7 +58,9 @@ export default function Toolbar({
           styles['search-modal'],
           isSearchOpen && styles['search-modal-open'],
         )}
-        inert={!isSearchOpen ? '' : null}
+        ref={(node) => node && (
+          isSearchOpen ? node.removeAttribute('inert') : node.setAttribute('inert', '')
+        )}
       >
         <div className={styles['search-list']}>
           <div className={styles['search-list-scroll']}>
@@ -109,7 +111,9 @@ export default function Toolbar({
               styles['search-close-button'],
               isSearchOpen && styles['search-close-button-visible'],
             )}
-            inert={!isSearchOpen ? '' : null}
+            ref={(node) => node && (
+              isSearchOpen ? node.removeAttribute('inert') : node.setAttribute('inert', '')
+            )}
             onClick={() => {
               setSearchQuery('');
               setIsSearchOpen(false);

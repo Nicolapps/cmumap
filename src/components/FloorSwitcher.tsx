@@ -64,7 +64,9 @@ export default function FloorSwitcher({
   return (
     <div
       className={clsx(styles.wrapper, isToolbarOpen && styles['toolbar-open'])}
-      inert={!isToolbarOpen ? '' : null}
+      ref={(node) => node && (
+        isToolbarOpen ? node.setAttribute('inert', '') : node.removeAttribute('inert')
+      )}
     >
       <div className={styles['floor-switcher']}>
         <div className={styles.building}>
