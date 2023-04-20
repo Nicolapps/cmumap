@@ -1,6 +1,6 @@
 import { latitudeRatio, longitudeRatio, rotate } from '@/geometry';
 import {
-  AbsoluteCoordinate, FloorPlan, getRoomTypeDetails, Room,
+  AbsoluteCoordinate, FloorPlan, getRoomTypeDetails, Placement, Room,
 } from '@/types';
 import {
   Annotation, Coordinate, Polygon,
@@ -9,6 +9,41 @@ import React, { useMemo } from 'react';
 import clsx from 'clsx';
 import styles from '../styles/FloorPlanOverlay.module.css';
 import RoomPin, { hasIcon } from './RoomPin';
+
+export function getFloorCenter(rooms: Room[]): AbsoluteCoordinate | undefined {
+  if (!rooms) return undefined;
+
+  const points: AbsoluteCoordinate[] = rooms.flatMap((room: Room) => room.shapes.flat());
+  const allX = points.map((p) => p.x);
+  const allY = points.map((p) => p.y);
+
+  const minX = Math.min(...allX);
+  const maxX = Math.max(...allX);
+  const minY = Math.min(...allY);
+  const maxY = Math.max(...allY);
+
+  return { x: (minX + maxX) / 2, y: (minY + maxY) / 2 };
+}
+
+export function positionOnMap(
+  absolute: AbsoluteCoordinate,
+  placement: Placement | null,
+  center: AbsoluteCoordinate | undefined,
+) {
+  if (placement === null) throw new Error('No active placement');
+  if (!center) throw new Error('No center');
+
+  const [absoluteY, absoluteX] = rotate(
+    absolute.x - center.x,
+    absolute.y - center.y,
+    placement.angle,
+  );
+
+  return {
+    latitude: (absoluteY / latitudeRatio) / placement.scale + placement.center.latitude,
+    longitude: (absoluteX / longitudeRatio) / placement.scale + placement.center.longitude,
+  };
+}
 
 interface FloorPlanOverlayProps {
   floorPlan: FloorPlan;
@@ -25,36 +60,13 @@ export default function FloorPlanOverlay({
 
   // Compute the center position of the bounding box of the current floor
   // (Will be used as the rotation center)
-  const center: (AbsoluteCoordinate | undefined) = useMemo(() => {
-    if (!rooms) return undefined;
+  const center: (AbsoluteCoordinate | undefined) = useMemo(() => (
+    getFloorCenter(rooms)
+  ), [rooms]);
 
-    const points: AbsoluteCoordinate[] = rooms.flatMap((room: Room) => room.shapes.flat());
-    const allX = points.map((p) => p.x);
-    const allY = points.map((p) => p.y);
-
-    const minX = Math.min(...allX);
-    const maxX = Math.max(...allX);
-    const minY = Math.min(...allY);
-    const maxY = Math.max(...allY);
-
-    return { x: (minX + maxX) / 2, y: (minY + maxY) / 2 };
-  }, [rooms]);
-
-  const convertToMap = (absolute: AbsoluteCoordinate): Coordinate => {
-    if (placement === null) throw new Error('No active placement');
-    if (!center) throw new Error('No center');
-
-    const [absoluteY, absoluteX] = rotate(
-      absolute.x - center.x,
-      absolute.y - center.y,
-      placement.angle,
-    );
-
-    return {
-      latitude: (absoluteY / latitudeRatio) / placement.scale + placement.center.latitude,
-      longitude: (absoluteX / longitudeRatio) / placement.scale + placement.center.longitude,
-    };
-  };
+  const convertToMap = (absolute: AbsoluteCoordinate): Coordinate => (
+    positionOnMap(absolute, placement, center)
+  );
 
   return (
     <>

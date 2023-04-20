@@ -4,7 +4,7 @@ import {
   MagnifyingGlassIcon, ArrowLeftIcon,
 } from '@heroicons/react/24/solid';
 import FloorSwitcher from '@/components/FloorSwitcher';
-import { Building, FloorMap } from '@/types';
+import { Building, FloorMap, Room } from '@/types';
 import clsx from 'clsx';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import SearchResults from './SearchResults';
@@ -16,6 +16,7 @@ export interface ToolbarProps {
   floorOrdinal: number | null;
   setFloorOrdinal: (newOrdinal: number | null) => void;
   onSelectBuilding: (newBuilding: Building | null) => void;
+  onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
 }
 
 export default function Toolbar({
@@ -25,6 +26,7 @@ export default function Toolbar({
   floorOrdinal,
   setFloorOrdinal,
   onSelectBuilding,
+  onSelectRoom,
 }: ToolbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +64,11 @@ export default function Toolbar({
                 floorMap={floorMap}
                 onSelectBuilding={(building: Building) => {
                   onSelectBuilding(building);
+                  setSearchQuery('');
+                  setIsSearchOpen(false);
+                }}
+                onSelectRoom={(room: Room, building: Building, newOrdinal: number) => {
+                  onSelectRoom(room, building, newOrdinal);
                   setSearchQuery('');
                   setIsSearchOpen(false);
                 }}

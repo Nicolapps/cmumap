@@ -16,10 +16,11 @@ import {
   PointOfInterestCategory,
 } from 'mapkit-react';
 import {
+  AbsoluteCoordinate,
   Building, Export, Floor, FloorMap,
 } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
-import FloorPlanOverlay from '@/components/FloorPlanOverlay';
+import FloorPlanOverlay, { getFloorCenter, positionOnMap } from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
@@ -246,6 +247,24 @@ export default function Home() {
           onSelectBuilding={(building) => {
             setFloorOrdinal(null);
             showBuilding(building, true);
+          }}
+          onSelectRoom={(room, building, floor) => {
+            setFloorOrdinal(floor.ordinal);
+            setActiveBuilding(building);
+
+            const { placement, rooms } = floors[`${building.code}-${floor.name}`]!;
+            const center = getFloorCenter(rooms);
+            const points: Coordinate[] = room.shapes.flat()
+              .map((point: AbsoluteCoordinate) => positionOnMap(point, placement, center));
+            const allLat = points.map((p) => p.latitude);
+            const allLon = points.map((p) => p.longitude);
+
+            mapRef.current?.setRegionAnimated(new mapkit.BoundingRegion(
+              Math.max(...allLat),
+              Math.max(...allLon),
+              Math.min(...allLat),
+              Math.min(...allLon),
+            ).toCoordinateRegion());
           }}
         />
       </main>

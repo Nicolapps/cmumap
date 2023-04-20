@@ -31,13 +31,17 @@ export interface BuildingSearchResultsProps {
   building: Building;
   floorMap: FloorMap;
   onSelectBuilding: (selectedBuilding: Building) => void;
+  onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
 }
+
+type RoomWithOrdinal = Room & { floor: Floor };
 
 export default function BuildingSearchResults({
   simplifiedQuery,
   building,
   floorMap,
   onSelectBuilding,
+  onSelectRoom,
 }: BuildingSearchResultsProps) {
   const roomNames: string[] = useMemo(() => (
     building.floors.flatMap((floor: Floor) => (
@@ -48,7 +52,7 @@ export default function BuildingSearchResults({
       ?? []
     ))), [building, floorMap]);
 
-  const filteredRooms: Room[] = useMemo(() => {
+  const filteredRooms: RoomWithOrdinal[] = useMemo(() => {
     // No query: only show building names
     if (simplifiedQuery === '') {
       return [];
@@ -68,6 +72,10 @@ export default function BuildingSearchResults({
           ))
           || (room.alias && simplify(room.alias).includes(simplifiedQuery))
         ))
+        .map((room: Room) => ({
+          ...room,
+          floor,
+        }))
       ?? []
     ));
   }, [building, simplifiedQuery, floorMap]);
@@ -104,13 +112,12 @@ export default function BuildingSearchResults({
         <ChevronRightIcon className={styles['search-list-arrow']} />
       </button>
 
-      {filteredRooms.map((room: Room) => (
+      {filteredRooms.map((room: RoomWithOrdinal) => (
         <button
           type="button"
           className={styles['search-list-element']}
           key={room.id}
-          // onClick={() => onSelectBuilding(building)}
-          // @todo
+          onClick={() => onSelectRoom(room, building, room.floor)}
         >
           <div className={styles['search-list-element-pin']}>
             <RoomPin room={room} />
