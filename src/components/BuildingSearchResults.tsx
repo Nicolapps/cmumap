@@ -8,8 +8,8 @@ import {
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import styles from '@/styles/BuildingSearchResults.module.css';
 import clsx from 'clsx';
+import simplify from '@/util/simplify';
 import RoomPin from './RoomPin';
-import { simplify } from './SearchResults';
 
 function titleCase(str: string) {
   return str.split(' ')
@@ -98,9 +98,7 @@ export default function BuildingSearchResults({
         <span className="floor-roundel">
           {building.code}
         </span>
-        <span
-          className={styles['search-list-element-title']}
-        >
+        <span className={styles['search-list-element-title']}>
           {building.name}
         </span>
         <ChevronRightIcon className={styles['search-list-arrow']} />
@@ -133,7 +131,9 @@ export default function BuildingSearchResults({
                 <span>{` • ${titleCase(roomType(room))}`}</span>
               )}
             </div>
-            {room.alias && <div>{room.alias}</div>}
+            {room.alias && (
+              <div className={styles['search-room-name']}>{room.alias}</div>
+            )}
           </div>
           <ChevronRightIcon className={styles['search-list-arrow']} />
         </button>

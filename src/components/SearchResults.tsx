@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Building, FloorMap } from '@/types';
 import styles from '@/styles/SearchResults.module.css';
+import simplify from '@/util/simplify';
 import BuildingSearchResults from './BuildingSearchResults';
 
 export interface SearchResultsProps {
@@ -8,10 +9,6 @@ export interface SearchResultsProps {
   buildings: Building[];
   floorMap: FloorMap;
   onSelectBuilding: (selectedBuilding: Building) => void;
-}
-
-export function simplify(str: string) {
-  return str.trim().toLowerCase().replaceAll(/[-. ]/g, '');
 }
 
 export default function SearchResults({
