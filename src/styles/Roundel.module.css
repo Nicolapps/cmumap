@@ -1,0 +1,26 @@
+.roundel {
+  font-feature-settings: 'ss06' on;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, .15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.1em;
+  letter-spacing: .02em;
+
+  background: #4b5563;
+  color: white;
+  font-weight: 500;
+  border: 1px solid white;
+}
+
+.condensed {
+  font-size: .9em;
+}
+
+.hyper-condensed {
+  font-size: .75em;
+}

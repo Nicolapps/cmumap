@@ -10,6 +10,7 @@ import styles from '@/styles/BuildingSearchResults.module.css';
 import clsx from 'clsx';
 import simplify from '@/util/simplify';
 import RoomPin from './RoomPin';
+import Roundel from './Roundel';
 
 function titleCase(str: string) {
   return str.split(' ')
@@ -103,9 +104,7 @@ export default function BuildingSearchResults({
         )}
         onClick={() => onSelectBuilding(building)}
       >
-        <span className="floor-roundel">
-          {building.code}
-        </span>
+        <Roundel code={building.code} />
         <span className={styles['search-list-element-title']}>
           {building.name}
         </span>

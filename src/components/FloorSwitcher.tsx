@@ -7,6 +7,7 @@ import {
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import styles from '@/styles/FloorSwitcher.module.css';
 import clsx from 'clsx';
+import Roundel from './Roundel';
 
 interface FloorSwitcherProps {
   building: Building;
@@ -75,10 +76,8 @@ export default function FloorSwitcher({
       )}
     >
       <div className={styles['floor-switcher']}>
-        <div className={styles['floor-roundel-wrapper']}>
-          <div className="floor-roundel">
-            {building.code}
-          </div>
+        <div className={styles['building-roundel-wrapper']}>
+          <Roundel code={building.code} />
         </div>
 
         <div className={styles.views}>
