@@ -64,7 +64,7 @@ export default function FloorSwitcher({
   return (
     <div
       className={clsx(styles.wrapper, isToolbarOpen && styles['toolbar-open'])}
-      aria-hidden={isToolbarOpen ? 'true' : 'false'}
+      inert={!isToolbarOpen ? '' : null}
     >
       <div className={styles['floor-switcher']}>
         <div className={styles.building}>

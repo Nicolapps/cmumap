@@ -50,7 +50,7 @@ export default function Toolbar({
           styles['search-modal-background'],
           isSearchOpen && styles['search-modal-background-active'],
         )}
-        aria-hidden="true"
+        role="presentation"
       />
 
       <div
@@ -58,7 +58,7 @@ export default function Toolbar({
           styles['search-modal'],
           isSearchOpen && styles['search-modal-open'],
         )}
-        aria-hidden={isSearchOpen ? 'false' : 'true'}
+        inert={!isSearchOpen ? '' : null}
       >
         <div className={styles['search-list']}>
           <div className={styles['search-list-scroll']}>
@@ -109,7 +109,7 @@ export default function Toolbar({
               styles['search-close-button'],
               isSearchOpen && styles['search-close-button-visible'],
             )}
-            aria-hidden={isSearchOpen ? 'false' : 'true'}
+            inert={!isSearchOpen ? '' : null}
             onClick={() => {
               setSearchQuery('');
               setIsSearchOpen(false);
