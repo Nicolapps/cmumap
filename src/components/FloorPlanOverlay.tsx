@@ -7,7 +7,7 @@ import {
 } from 'mapkit-react';
 import React, { useMemo } from 'react';
 import clsx from 'clsx';
-import styles from '../styles/FloorPlan.module.css';
+import styles from '../styles/FloorPlanOverlay.module.css';
 
 interface FloorPlanOverlayProps {
   floorPlan: FloorPlan;
@@ -126,8 +126,17 @@ export default function FloorPlanOverlay({
                       </svg>
                     )}
                   </div>
-                  {showRoomNames && (
-                    <span className={styles.label}>{room.name}</span>
+                  {(showRoomNames || room.alias) && (
+                    <span className={styles.label}>
+                      {showRoomNames && (
+                        <span className={styles['room-number']}>
+                          {room.name}
+                        </span>
+                      )}
+                      {room.alias && (
+                        <span>{room.alias}</span>
+                      )}
+                    </span>
                   )}
                 </div>
               </Annotation>

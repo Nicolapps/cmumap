@@ -30,16 +30,18 @@
 .label {
   flex: 1;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   height: var(--label-height);
-  /* background-color: white; */
+  width: 200px;
 
   position: absolute;
   left: calc(var(--icon-size) + var(--gutter));
   top: calc((var(--icon-size) - var(--label-height)) / 2);
   
-  font-weight: 400;
   letter-spacing: .02em;
+
+  line-height: 1.1;
   
   font-size: 14px;
   text-shadow: 
@@ -51,6 +53,15 @@
     -1px 1px 0px white,
     0px 1px 0px white,
     1px 1px 0px white;
+}
+
+.room-number {
+  /* High legibility alternates */
+  font-feature-settings: 'ss06' on;
+}
+
+.room-name {
+  /* font-style: italic; */
 }
 
 .pin path {
