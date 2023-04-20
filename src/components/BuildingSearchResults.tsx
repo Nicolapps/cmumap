@@ -63,6 +63,7 @@ export default function BuildingSearchResults({
         className={clsx(
           styles['search-list-element'],
           styles['search-list-element-building'],
+          filteredRooms.length > 0 && styles['search-list-element-sticky'],
         )}
         onClick={() => onSelectBuilding(building)}
       >
