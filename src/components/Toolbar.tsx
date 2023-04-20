@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from '@/styles/Toolbar.module.css';
 import {
   MagnifyingGlassIcon, ArrowLeftIcon,
@@ -6,6 +6,7 @@ import {
 import FloorSwitcher from '@/components/FloorSwitcher';
 import { Building, FloorMap } from '@/types';
 import clsx from 'clsx';
+import useEscapeKey from '@/hooks/useEscapeKey';
 import SearchResults from './SearchResults';
 
 export interface ToolbarProps {
@@ -27,6 +28,13 @@ export default function Toolbar({
 }: ToolbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>();
+
+  useEscapeKey(() => {
+    setSearchQuery('');
+    setIsSearchOpen(false);
+    inputRef.current?.blur();
+  });
 
   return (
     <>
@@ -53,6 +61,7 @@ export default function Toolbar({
               floorMap={floorMap}
               onSelectBuilding={(building: Building) => {
                 onSelectBuilding(building);
+                setSearchQuery('');
                 setIsSearchOpen(false);
               }}
             />
@@ -87,12 +96,16 @@ export default function Toolbar({
               isSearchOpen && styles['search-close-button-visible'],
             )}
             aria-hidden={isSearchOpen ? 'false' : 'true'}
-            onClick={() => setIsSearchOpen(false)}
+            onClick={() => {
+              setSearchQuery('');
+              setIsSearchOpen(false);
+            }}
           >
             <ArrowLeftIcon className={styles['search-close-icon']} />
           </button>
           <input
             type="search"
+            ref={inputRef}
             className={styles['search-box-input']}
             placeholder="Search"
             value={searchQuery}
