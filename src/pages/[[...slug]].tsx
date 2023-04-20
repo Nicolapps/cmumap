@@ -23,7 +23,7 @@ import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay, { getFloorCenter, positionOnMap } from '@/components/FloorPlanOverlay';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 
-import { InformationCircleIcon } from '@heroicons/react/24/solid';
+// import { InformationCircleIcon } from '@heroicons/react/24/solid';
 
 import useMapPosition from '@/hooks/useMapPosition';
 import { isInPolygonCoordinates } from '@/geometry';
