@@ -28,7 +28,7 @@ export default function Toolbar({
 }: ToolbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEscapeKey(() => {
     setSearchQuery('');
