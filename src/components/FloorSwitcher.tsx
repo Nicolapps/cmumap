@@ -1,6 +1,6 @@
 /* eslint-disable no-bitwise */
 import { Building, Floor } from '@/types';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ChevronUpIcon, ChevronDownIcon,
 } from '@heroicons/react/24/solid';
@@ -42,6 +42,11 @@ export default function FloorSwitcher({
   isToolbarOpen,
   onOrdinalChange,
 }: FloorSwitcherProps) {
+  const [showFloorPicker, setShowFloorPicker] = useState<boolean>(false);
+
+  // Hide the floor picker if the building or floor changes
+  useEffect(() => setShowFloorPicker(false), [building, ordinal]);
+
   const floorIndex: number = getFloorIndexAtOrdinal(building, ordinal);
   const isFloorValid = floorIndex >= 0;
 
@@ -60,6 +65,8 @@ export default function FloorSwitcher({
     : insertIndex;
   const upperFloorOrdinal = building.floors[upperFloorIndex]?.ordinal;
 
+  const floorPickerRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <div
       className={clsx(styles.wrapper, isToolbarOpen && styles['toolbar-open'])}
@@ -68,67 +75,121 @@ export default function FloorSwitcher({
       )}
     >
       <div className={styles['floor-switcher']}>
-        <div className={styles.building}>
-          <span className="floor-roundel">
+        <div className={styles['floor-roundel-wrapper']}>
+          <div className="floor-roundel">
             {building.code}
-          </span>
-          <span className={styles['building-name']}>
-            {building.name}
-          </span>
+          </div>
         </div>
 
-        {building.floors.length !== 0 && (
-          <>
-            <button
-              type="button"
-              className={styles.button}
-              title="Lower floor"
-              disabled={!canGoDown}
-              onClick={() => onOrdinalChange(lowerFloorOrdinal)}
-            >
-              <ChevronDownIcon className={styles['button-icon']} />
-            </button>
-            <button
-              type="button"
-              className={clsx(styles.button, styles['current-floor'])}
-            >
-              {isFloorValid ? building.floors[floorIndex].name : '—'}
-              <span className={styles['ellipsis-indicator']}>
-                {
-                  building.floors.map((floor: Floor) => (
-                    <div
-                      key={floor.ordinal}
-                      className={clsx(
-                        styles['ellipsis-dot'],
-                        floor.ordinal === ordinal && styles['ellipsis-dot-active'],
-                      )}
-                    />
-                  ))
-                }
-              </span>
-            </button>
-            <button
-              type="button"
-              className={styles.button}
-              title="Upper floor"
-              disabled={!canGoUp}
-              onClick={() => onOrdinalChange(upperFloorOrdinal)}
-            >
-              <ChevronUpIcon className={styles['button-icon']} />
-            </button>
-          </>
-        )}
-
-        {building.floors.length === 0 && (
-          <p className={styles['no-floor']}>
-            <ExclamationCircleIcon className={styles['no-floor-icon']} />
-            <span>
-              Floor plan
-              <br />
-              not available
+        <div className={styles.views}>
+          <div
+            className={clsx(
+              styles['default-view'],
+              showFloorPicker && styles['view-hidden'],
+            )}
+            ref={(node) => node && (
+              showFloorPicker ? node.setAttribute('inert', '') : node.removeAttribute('inert')
+            )}
+          >
+            <span className={styles['building-name']}>
+              {building.name}
             </span>
-          </p>
-        )}
+
+            {building.floors.length !== 0 && (
+              <>
+                <button
+                  type="button"
+                  className={styles.button}
+                  title="Lower floor"
+                  disabled={!canGoDown}
+                  onClick={() => onOrdinalChange(lowerFloorOrdinal)}
+                >
+                  <ChevronDownIcon className={styles['button-icon']} />
+                </button>
+                <button
+                  type="button"
+                  title="Select a floor"
+                  className={clsx(styles.button, styles['current-floor'])}
+                  onClick={() => {
+                    setShowFloorPicker(true);
+
+                    const floorPicker = floorPickerRef.current!;
+                    const totalWidth = floorPicker.clientWidth;
+                    const buttonWidth = 52;
+                    floorPicker.scrollLeft = (floorIndex + 0.5) * buttonWidth - totalWidth / 2;
+                  }}
+                  disabled={building.floors.length < 2}
+                >
+                  {isFloorValid ? building.floors[floorIndex].name : '—'}
+                  <span className={styles['ellipsis-indicator']}>
+                    {
+                      building.floors.map((floor: Floor) => (
+                        <div
+                          key={floor.ordinal}
+                          className={clsx(
+                            styles['ellipsis-dot'],
+                            floor.ordinal === ordinal && styles['ellipsis-dot-active'],
+                          )}
+                        />
+                      ))
+                    }
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className={styles.button}
+                  title="Upper floor"
+                  disabled={!canGoUp}
+                  onClick={() => onOrdinalChange(upperFloorOrdinal)}
+                >
+                  <ChevronUpIcon className={styles['button-icon']} />
+                </button>
+              </>
+            )}
+
+            {building.floors.length === 0 && (
+              <p className={styles['no-floor']}>
+                <ExclamationCircleIcon className={styles['no-floor-icon']} />
+                <span>
+                  Floor plan
+                  <br />
+                  not available
+                </span>
+              </p>
+            )}
+          </div>
+          <div
+            className={clsx(
+              styles['floor-picker'],
+              !showFloorPicker && styles['view-hidden'],
+            )}
+            ref={(node) => node && (
+              showFloorPicker ? node.removeAttribute('inert') : node.setAttribute('inert', '')
+            )}
+          >
+            <div className={styles['floor-picker-scroll']} ref={floorPickerRef}>
+              {building.floors.map((floor: Floor) => (
+                <button
+                  key={floor.ordinal}
+                  type="button"
+                  className={clsx(
+                    styles.button,
+                    floor.ordinal === ordinal && styles['button-active'],
+                  )}
+                  title={`Floor ${floor.name}`}
+                  onClick={() => {
+                    setShowFloorPicker(false);
+                    onOrdinalChange(floor.ordinal);
+                  }}
+                  role="tab"
+                  aria-selected={floor.ordinal === ordinal ? 'true' : 'false'}
+                >
+                  {floor.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
