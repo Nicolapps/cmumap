@@ -14,7 +14,7 @@ export interface ToolbarProps {
   activeBuilding: Building | null;
   floorOrdinal: number | null;
   setFloorOrdinal: (newOrdinal: number | null) => void;
-  showBuilding: (newBuilding: Building | null, updateMap: boolean) => void;
+  onSelectBuilding: (newBuilding: Building | null) => void;
 }
 
 export default function Toolbar({
@@ -23,7 +23,7 @@ export default function Toolbar({
   activeBuilding,
   floorOrdinal,
   setFloorOrdinal,
-  showBuilding,
+  onSelectBuilding,
 }: ToolbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -52,7 +52,7 @@ export default function Toolbar({
               buildings={buildings}
               floorMap={floorMap}
               onSelectBuilding={(building: Building) => {
-                showBuilding(building, true);
+                onSelectBuilding(building);
                 setIsSearchOpen(false);
               }}
             />

@@ -72,12 +72,13 @@ export default function Home() {
       ).toCoordinateRegion());
     }
 
-    if (floorOrdinal === null && newBuilding.floors.length > 0) {
-      const defaultFloorOrdinal = newBuilding.floors
-        .find((floor) => floor.name === newBuilding.defaultFloor)!
-        .ordinal;
-      setFloorOrdinal(defaultFloorOrdinal);
-    }
+    setFloorOrdinal((currentFloorOrdinal) => (
+      (currentFloorOrdinal === null && newBuilding.floors.length > 0)
+        ? newBuilding.floors
+          .find((floor) => floor.name === newBuilding.defaultFloor)!
+          .ordinal
+        : currentFloorOrdinal
+    ));
   };
 
   // Load the data from the API
@@ -233,7 +234,10 @@ export default function Home() {
           activeBuilding={activeBuilding}
           floorOrdinal={floorOrdinal}
           setFloorOrdinal={setFloorOrdinal}
-          showBuilding={showBuilding}
+          onSelectBuilding={(building) => {
+            setFloorOrdinal(null);
+            showBuilding(building, true);
+          }}
         />
       </main>
     </>
