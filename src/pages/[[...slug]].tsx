@@ -80,6 +80,9 @@ export default function Home() {
           .ordinal
         : currentFloorOrdinal
     ));
+
+    setShowFloor(true);
+    setShowRoomNames(false);
   };
 
   // Load the data from the API
@@ -95,8 +98,6 @@ export default function Home() {
         const building = buildingCode && response.buildings.find((b) => b.code === buildingCode)!;
         if (building) {
           showBuilding(building, true);
-          setShowFloor(true);
-          setShowRoomNames(false);
 
           const floor = building.floors.find(({ name }) => name === floorName)!;
           if (floor) {
@@ -265,6 +266,9 @@ export default function Home() {
               Math.min(...allLat),
               Math.min(...allLon),
             ).toCoordinateRegion());
+
+            setShowFloor(true);
+            setShowRoomNames(true);
           }}
         />
       </main>
