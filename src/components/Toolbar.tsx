@@ -4,7 +4,12 @@ import {
   MagnifyingGlassIcon, ArrowLeftIcon,
 } from '@heroicons/react/24/solid';
 import FloorSwitcher from '@/components/FloorSwitcher';
-import { Building, FloorMap, Room } from '@/types';
+import {
+  Building,
+  Floor,
+  FloorMap,
+  Room,
+} from '@/types';
 import clsx from 'clsx';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import SearchResults from './SearchResults';
@@ -67,8 +72,8 @@ export default function Toolbar({
                   setSearchQuery('');
                   setIsSearchOpen(false);
                 }}
-                onSelectRoom={(room: Room, building: Building, newOrdinal: number) => {
-                  onSelectRoom(room, building, newOrdinal);
+                onSelectRoom={(room: Room, building: Building, newFloor: Floor) => {
+                  onSelectRoom(room, building, newFloor);
                   setSearchQuery('');
                   setIsSearchOpen(false);
                 }}

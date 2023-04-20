@@ -1,5 +1,10 @@
 import React, { useMemo } from 'react';
-import { Building, FloorMap, Room } from '@/types';
+import {
+  Building,
+  Floor,
+  FloorMap,
+  Room,
+} from '@/types';
 import styles from '@/styles/SearchResults.module.css';
 import simplify from '@/util/simplify';
 import BuildingSearchResults from './BuildingSearchResults';
