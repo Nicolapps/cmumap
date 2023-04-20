@@ -11,13 +11,17 @@ export interface SearchResultsProps {
   onSelectBuilding: (selectedBuilding: Building) => void;
 }
 
+function simplify(str: string) {
+  return str.trim().toLowerCase().replaceAll(/[-\. ]/g, '');
+}
+
 export default function SearchResults({
   query,
   buildings,
   floorMap,
   onSelectBuilding,
 }: SearchResultsProps) {
-  const simplifiedQuery = useMemo(() => query.trim().toLowerCase(), [query]);
+  const simplifiedQuery = useMemo(() => simplify(query), [query]);
 
   const filteredBuildings = useMemo(() => {
     if (simplifiedQuery === '') {
@@ -26,7 +30,8 @@ export default function SearchResults({
 
     return buildings.filter((b: Building) => (
       simplifiedQuery.startsWith(b.code.toLowerCase())
-      || b.name.toLowerCase().includes(simplifiedQuery)
+      || simplify(b.name).includes(simplifiedQuery)
+      || simplify(b.code).includes(simplifiedQuery)
     ));
   }, [buildings, simplifiedQuery]);
 
