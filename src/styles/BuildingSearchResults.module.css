@@ -36,3 +36,7 @@
   height: 20px;
   fill: rgba(0, 0, 0, .3);
 }
+
+.search-list-element-building {
+  height: 60px;
+}
