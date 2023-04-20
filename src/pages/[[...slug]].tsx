@@ -135,6 +135,13 @@ export default function Home() {
     longitudeDelta: 0.011960061265583022,
   }), []);
 
+  const cameraBoundary = useMemo(() => ({
+    centerLatitude: 40.44533940432823,
+    centerLongitude: -79.9457060010195,
+    latitudeDelta: 0.009258427149788417,
+    longitudeDelta: 0.014410141520116326,
+  }), []);
+
   const mobileBottomPadding = showFloor ? 130 : 72;
 
   const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
@@ -186,6 +193,8 @@ export default function Home() {
           ref={mapRef}
           token={process.env.NEXT_PUBLIC_MAPKITJS_TOKEN!}
           initialRegion={initialRegion}
+          cameraBoundary={cameraBoundary}
+          maxCameraDistance={1500}
           includedPOICategories={[
             PointOfInterestCategory.PublicTransport,
           ]}
