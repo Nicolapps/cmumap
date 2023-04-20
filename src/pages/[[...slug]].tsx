@@ -220,9 +220,9 @@ export default function Home() {
           }}
         />
 
-        <button className={styles['info-button']} type="button" title="Help">
+        {/* <button className={styles['info-button']} type="button" title="Help">
           <InformationCircleIcon className={styles['info-button-icon']} />
-        </button>
+        </button> */}
 
         <Map
           ref={mapRef}
