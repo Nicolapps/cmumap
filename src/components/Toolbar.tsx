@@ -38,7 +38,6 @@ export default function Toolbar({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEscapeKey(() => {
-    setSearchQuery('');
     setIsSearchOpen(false);
     inputRef.current?.blur();
   });
@@ -71,12 +70,10 @@ export default function Toolbar({
                 floorMap={floorMap}
                 onSelectBuilding={(building: Building) => {
                   onSelectBuilding(building);
-                  setSearchQuery('');
                   setIsSearchOpen(false);
                 }}
                 onSelectRoom={(room: Room, building: Building, newFloor: Floor) => {
                   onSelectRoom(room, building, newFloor);
-                  setSearchQuery('');
                   setIsSearchOpen(false);
                 }}
               />
@@ -115,7 +112,6 @@ export default function Toolbar({
               isSearchOpen ? node.removeAttribute('inert') : node.setAttribute('inert', '')
             )}
             onClick={() => {
-              setSearchQuery('');
               setIsSearchOpen(false);
             }}
           >
@@ -127,8 +123,11 @@ export default function Toolbar({
             className={styles['search-box-input']}
             placeholder="Search"
             value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            onFocus={() => setIsSearchOpen(true)}
+            onChange={(event) => {
+              setIsSearchOpen(true);
+              setSearchQuery(event.target.value);
+            }}
+            onClick={() => setIsSearchOpen(true)}
           />
         </div>
       </div>
