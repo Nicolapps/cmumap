@@ -12,7 +12,7 @@ export interface SearchResultsProps {
 }
 
 function simplify(str: string) {
-  return str.trim().toLowerCase().replaceAll(/[-\. ]/g, '');
+  return str.trim().toLowerCase().replaceAll(/[-. ]/g, '');
 }
 
 export default function SearchResults({
