@@ -175,7 +175,6 @@ export default function FloorSwitcher({
                     styles.button,
                     floor.ordinal === ordinal && styles['button-active'],
                   )}
-                  title={`Floor ${floor.name}`}
                   onClick={() => {
                     setShowFloorPicker(false);
                     onOrdinalChange(floor.ordinal);
