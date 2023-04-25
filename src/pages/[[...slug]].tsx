@@ -151,8 +151,6 @@ export default function Home() {
     longitudeDelta: 0.014410141520116326,
   }), []);
 
-  const mobileBottomPadding = showFloor ? 130 : 72;
-
   const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
     if (!buildings) return;
 
@@ -244,7 +242,7 @@ export default function Home() {
           showsUserLocationControl
           allowWheelToZoom
           mapType={MapType.MutedStandard}
-          paddingBottom={isDesktop ? 0 : mobileBottomPadding}
+          paddingBottom={isDesktop ? 0 : 72}
           paddingLeft={4}
           paddingRight={4}
           paddingTop={10}

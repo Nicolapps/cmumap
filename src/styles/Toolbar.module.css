@@ -6,6 +6,27 @@
   z-index: 100;
   padding: var(--main-ui-padding);
   transition: var(--search-transition-duration) ease-in-out transform;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--toolbar-gap);
+  justify-content: flex-end;
+
+  height: calc(
+    var(--main-ui-padding)
+    + var(--floor-switcher-height)
+    + var(--toolbar-gap)
+    + var(--search-box-height)
+    + var(--main-ui-padding)
+  );
+}
+
+@supports (height: 100dvh) {
+  .toolbar {
+    bottom: unset;
+    top: 0;
+    transform: translateY(calc(100dvh - 100%));
+  }
 }
 
 .search-box {
@@ -86,7 +107,10 @@
 }
 
 .toolbar-open {
-  transform: translateY(calc(var(--search-box-height) + 2 * var(--main-ui-padding) - 100vh));
+  top: 0;
+  transform: translateY(calc(-1 * (
+    var(--floor-switcher-height) + var(--toolbar-gap)
+  )));
 }
 
 .search-modal-background {
@@ -154,6 +178,8 @@
     width: 400px;
     top: 0;
     bottom: auto;
+    height: auto;
+    transform: none;
   }
 
   .search-modal-background {

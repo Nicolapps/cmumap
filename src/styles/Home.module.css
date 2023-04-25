@@ -1,10 +1,6 @@
 .main {
   height: 100%;
   position: relative;
-
-  --main-ui-padding: 12px;
-  --search-box-height: 58px;
-  --search-transition-duration: .3s;
 }
 
 .info-button {

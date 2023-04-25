@@ -15,7 +15,7 @@
 
 .button {
   position: relative;
-  width: 52px;
+  width: var(--floor-switcher-height);
   background: transparent;
   appearance: none;
   border: 0;
@@ -97,7 +97,6 @@
 }
 
 .wrapper {
-  padding-bottom: 8px;
   transition: var(--search-transition-duration) ease-in-out opacity;
 }
 
@@ -108,7 +107,7 @@
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   overflow: hidden;
-  height: 52px;
+  height: var(--floor-switcher-height);
 }
 
 .toolbar-open {
@@ -179,7 +178,7 @@
 .floor-picker .button {
   flex: 1;
   flex-shrink: 0;
-  min-width: 52px;
+  min-width: var(--floor-switcher-height);
   font-weight: 300;
   font-size: 20px;
 }
