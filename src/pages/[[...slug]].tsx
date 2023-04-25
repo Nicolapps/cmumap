@@ -85,6 +85,26 @@ export default function Home() {
     ));
   };
 
+  const zoomOnDefaultBuilding = (newBuildings: Building[] | null) => {
+    // Make sure that both buildings and the map are loaded
+    if (!newBuildings || !mapRef.current) return;
+
+    // Handle the URL
+    const [buildingCode, floorName] = (router.query?.slug?.[0] ?? '').toUpperCase().split('-');
+    const building = buildingCode && newBuildings.find((b) => b.code === buildingCode)!;
+    if (building) {
+      showBuilding(building, true);
+
+      const floor = building.floors.find(({ name }) => name === floorName)!;
+      if (floor) {
+        setFloorOrdinal(floor.ordinal);
+      }
+    } else {
+      // Redirect to the default page
+      router.push('/', undefined, { shallow: true });
+    }
+  };
+
   // Load the data from the API
   useEffect(() => {
     fetch(exportFile)
@@ -93,20 +113,7 @@ export default function Home() {
         setBuildings(response.buildings);
         setFloors(response.floors);
 
-        // Handle the URL
-        const [buildingCode, floorName] = (router.query?.slug?.[0] ?? '').toUpperCase().split('-');
-        const building = buildingCode && response.buildings.find((b) => b.code === buildingCode)!;
-        if (building) {
-          showBuilding(building, true);
-
-          const floor = building.floors.find(({ name }) => name === floorName)!;
-          if (floor) {
-            setFloorOrdinal(floor.ordinal);
-          }
-        } else {
-          // Redirect to the default page
-          router.push('/', undefined, { shallow: true });
-        }
+        zoomOnDefaultBuilding(response.buildings);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -243,6 +250,9 @@ export default function Home() {
           paddingTop={10}
           showsZoomControl={!!isDesktop}
           showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
+          onLoad={() => {
+            zoomOnDefaultBuilding(buildings);
+          }}
           onRegionChangeStart={onRegionChangeStart}
           onRegionChangeEnd={onRegionChangeEnd}
         >

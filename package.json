@@ -17,7 +17,7 @@
     "clsx": "^1.2.1",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
-    "mapkit-react": "^1.8.0",
+    "mapkit-react": "^1.10.0",
     "netlify-plugin-mapkitjs-token": "^1.0.0",
     "next": "13.2.4",
     "react": "18.2.0",
