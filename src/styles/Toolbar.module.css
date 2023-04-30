@@ -51,19 +51,36 @@
   background: white;
   height: var(--search-box-height);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  border: 0;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .search-box-input {
-  width: 100%;
-  height: 100%;
   background: transparent;
   border: 0;
   font-size: 20px;
-  padding-left: 64px;
+  padding: 0;
   padding-right: 12px;
   font-family: inherit;
+  animation: var(--search-transition-duration) linear appear;
+
+  /*
+   * Force the search box input to be at the top of the screen.
+   * This ensures that Safari on iOS will not try to scroll down when
+   * it is focused and it moves top the top.
+   */
+  position: fixed;
+  top: var(--main-ui-padding);
+  left: calc(var(--main-ui-padding) + var(--search-icon-width));
+  height: var(--search-box-height);
+  width: calc(100% - 2 * var(--main-ui-padding) - var(--search-icon-width));
+  z-index: 100;
+}
+
+@keyframes appear {
+  0%, 80% { opacity: 0 }
+  100% { opacity: 1 }
 }
 
 .search-box-input::-webkit-search-decoration {
@@ -72,7 +89,6 @@
 
 .search-box-input:focus {
   outline: 0;
-  /* @TODO Fix */
 }
 
 .search-icon-wrapper {
@@ -84,7 +100,7 @@
   align-items: center;
   justify-content: center;
 
-  width: 64px;
+  width: var(--search-icon-width);
   height: 100%;
 
   pointer-events: none;
@@ -100,13 +116,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 64px;
+  width: var(--search-icon-width);
+  border-radius: 8px;
   height: 100%;
   background: white;
   border: 0;
   padding: 0;
   margin: 0;
-  border-radius: 16px;
   opacity: 0;
   transition: var(--search-transition-duration) ease-in-out opacity;
   pointer-events: none;
@@ -121,6 +137,28 @@
   width: 24px;
   height: 24px;
   color: #4b5563;
+}
+
+.open-search-button {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  cursor: text;
+
+  display: block;
+  text-align: left;
+  padding-left: var(--search-icon-width);
+  font-size: 20px;
+  font-family: inherit;
+  white-space: nowrap;
+  color: inherit;
+  font-family: inherit;
+}
+
+.placeholder {
+  color: #a9a9a9;
 }
 
 .search-modal-background {
@@ -185,7 +223,7 @@
   }
 
   .toolbar {
-    width: 400px;
+    width: var(--search-width-desktop);
     top: 0;
     bottom: auto;
     height: auto;
@@ -197,6 +235,15 @@
   }
 
   .search-modal {
-    width: 400px;
+    width: var(--search-width-desktop);
+  }
+
+  .search-box-input {
+    width: calc(
+      var(--search-width-desktop)
+      - var(--search-icon-width)
+      - 2 * var(--main-ui-padding)
+    );
+    animation: none;
   }
 }

@@ -13,6 +13,7 @@ import {
 import clsx from 'clsx';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import SearchResults from './SearchResults';
+import * as querystring from "querystring";
 
 export interface ToolbarProps {
   buildings: Building[] | null;
@@ -35,11 +36,9 @@ export default function Toolbar({
 }: ToolbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEscapeKey(() => {
     setIsSearchOpen(false);
-    inputRef.current?.blur();
   });
 
   return (
@@ -117,20 +116,40 @@ export default function Toolbar({
           >
             <ArrowLeftIcon className={styles['search-close-icon']} />
           </button>
-          <input
-            type="search"
-            ref={inputRef}
-            className={styles['search-box-input']}
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(event) => {
-              setIsSearchOpen(true);
-              setSearchQuery(event.target.value);
-            }}
-            onClick={() => setIsSearchOpen(true)}
-          />
+          {!isSearchOpen && (
+            <button
+              type="button"
+              aria-label="Open Search"
+              className={clsx(
+                styles['open-search-button'],
+                !searchQuery && styles.placeholder,
+              )}
+              onClick={() => {
+                setIsSearchOpen(true);
+                // inputRef.current!.focus();
+              }}
+            >
+              {searchQuery === '' ? 'Search' : searchQuery}
+            </button>
+          )}
         </div>
       </div>
+
+      {isSearchOpen && (
+        <input
+          type="search"
+          className={clsx(
+            styles['search-box-input'],
+          )}
+          placeholder="Search"
+          value={searchQuery}
+          onChange={(event) => {
+            setSearchQuery(event.target.value);
+          }}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
+        />
+      )}
     </>
   );
 }
