@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styles from '@/styles/Toolbar.module.css';
 import {
   MagnifyingGlassIcon, ArrowLeftIcon,
@@ -13,7 +13,6 @@ import {
 import clsx from 'clsx';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import SearchResults from './SearchResults';
-import * as querystring from "querystring";
 
 export interface ToolbarProps {
   buildings: Building[] | null;
