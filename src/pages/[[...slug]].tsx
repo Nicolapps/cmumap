@@ -189,6 +189,7 @@ export default function Home() {
       <Head>
         <title>{title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Interactive map of the CMU campus" />
       </Head>
       <main className={styles.main}>
         <Toolbar
