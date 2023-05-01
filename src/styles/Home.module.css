@@ -24,3 +24,7 @@
   height: 30px;
   fill: #555;
 }
+
+.map-wrapper {
+  height: 100%;
+}

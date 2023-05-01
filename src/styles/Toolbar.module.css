@@ -104,6 +104,7 @@
   height: 100%;
 
   pointer-events: none;
+  z-index: 95;
 }
 
 .search-icon {
@@ -113,12 +114,14 @@
 }
 
 .search-close-button {
+  --search-close-margin: 4px;
+
   position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--search-icon-width);
+  top: var(--search-close-margin);
+  left: var(--search-close-margin);
+  width: calc(var(--search-icon-width) - 2 * var(--search-close-margin));
   border-radius: 8px;
-  height: 100%;
+  height: calc(var(--search-box-height) - 2 * var(--search-close-margin));
   background: white;
   border: 0;
   padding: 0;
@@ -126,6 +129,11 @@
   opacity: 0;
   transition: var(--search-transition-duration) ease-in-out opacity;
   pointer-events: none;
+  z-index: 100;
+}
+
+.search-close-button:focus {
+  border: 3px solid #007cff;
 }
 
 .search-close-button-visible {
@@ -154,7 +162,12 @@
   font-family: inherit;
   white-space: nowrap;
   color: inherit;
-  font-family: inherit;
+  border-radius: 8px;
+}
+
+.open-search-button:focus {
+  border: 3px solid #007cff;
+  padding-left: calc(var(--search-icon-width) - 3px);
 }
 
 .placeholder {

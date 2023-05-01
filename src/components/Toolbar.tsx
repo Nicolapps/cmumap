@@ -22,6 +22,8 @@ export interface ToolbarProps {
   setFloorOrdinal: (newOrdinal: number | null) => void;
   onSelectBuilding: (newBuilding: Building | null) => void;
   onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
+  isSearchOpen: boolean;
+  onSetIsSearchOpen: (boolean) => void;
 }
 
 export default function Toolbar({
@@ -32,54 +34,17 @@ export default function Toolbar({
   setFloorOrdinal,
   onSelectBuilding,
   onSelectRoom,
+  isSearchOpen,
+  onSetIsSearchOpen,
 }: ToolbarProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEscapeKey(() => {
-    setIsSearchOpen(false);
+    onSetIsSearchOpen(false);
   });
 
   return (
     <>
-      <div
-        className={clsx(
-          styles['search-modal-background'],
-          isSearchOpen && styles['search-modal-background-active'],
-        )}
-        role="presentation"
-      />
-
-      <div
-        className={clsx(
-          styles['search-modal'],
-          isSearchOpen && styles['search-modal-open'],
-        )}
-        ref={(node) => node && (
-          isSearchOpen ? node.removeAttribute('inert') : node.setAttribute('inert', '')
-        )}
-      >
-        <div className={styles['search-list']}>
-          <div className={styles['search-list-scroll']}>
-            {buildings && (
-              <SearchResults
-                query={searchQuery}
-                buildings={buildings}
-                floorMap={floorMap}
-                onSelectBuilding={(building: Building) => {
-                  onSelectBuilding(building);
-                  setIsSearchOpen(false);
-                }}
-                onSelectRoom={(room: Room, building: Building, newFloor: Floor) => {
-                  onSelectRoom(room, building, newFloor);
-                  setIsSearchOpen(false);
-                }}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
       <div
         className={clsx(
           styles.toolbar,
@@ -110,7 +75,7 @@ export default function Toolbar({
               isSearchOpen ? node.removeAttribute('inert') : node.setAttribute('inert', '')
             )}
             onClick={() => {
-              setIsSearchOpen(false);
+              onSetIsSearchOpen(false);
             }}
           >
             <ArrowLeftIcon className={styles['search-close-icon']} />
@@ -124,7 +89,7 @@ export default function Toolbar({
                 !searchQuery && styles.placeholder,
               )}
               onClick={() => {
-                setIsSearchOpen(true);
+                onSetIsSearchOpen(true);
                 // inputRef.current!.focus();
               }}
             >
@@ -149,6 +114,44 @@ export default function Toolbar({
           autoFocus
         />
       )}
+
+      <div
+        className={clsx(
+          styles['search-modal-background'],
+          isSearchOpen && styles['search-modal-background-active'],
+        )}
+        role="presentation"
+      />
+
+      <div
+        className={clsx(
+          styles['search-modal'],
+          isSearchOpen && styles['search-modal-open'],
+        )}
+        ref={(node) => node && (
+          isSearchOpen ? node.removeAttribute('inert') : node.setAttribute('inert', '')
+        )}
+      >
+        <div className={styles['search-list']}>
+          <div className={styles['search-list-scroll']}>
+            {buildings && (
+              <SearchResults
+                query={searchQuery}
+                buildings={buildings}
+                floorMap={floorMap}
+                onSelectBuilding={(building: Building) => {
+                  onSelectBuilding(building);
+                  onSetIsSearchOpen(false);
+                }}
+                onSelectRoom={(room: Room, building: Building, newFloor: Floor) => {
+                  onSelectRoom(room, building, newFloor);
+                  onSetIsSearchOpen(false);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

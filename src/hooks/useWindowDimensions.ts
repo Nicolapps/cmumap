@@ -29,3 +29,10 @@ export default function useWindowDimensions() {
 
   return windowDimensions;
 }
+
+export function useIsDesktop() {
+  const windowDimensions = useWindowDimensions();
+  return windowDimensions
+    && windowDimensions.width
+    && windowDimensions.width >= 768;
+}

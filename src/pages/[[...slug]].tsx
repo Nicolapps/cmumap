@@ -21,7 +21,7 @@ import {
 } from '@/types';
 import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay, { getFloorCenter, positionOnMap } from '@/components/FloorPlanOverlay';
-import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { useIsDesktop } from '@/hooks/useWindowDimensions';
 
 // import { InformationCircleIcon } from '@heroicons/react/24/solid';
 
@@ -41,16 +41,14 @@ export default function Home() {
 
   const [showFloor, setShowFloor] = useState(false);
   const [showRoomNames, setShowRoomNames] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const [activeBuilding, setActiveBuilding] = useState<Building | null>(null);
   const [floorOrdinal, setFloorOrdinal] = useState<number | null>(null);
   const currentFloorName = (floorOrdinal !== null) && activeBuilding
     ?.floors[getFloorIndexAtOrdinal(activeBuilding, floorOrdinal)]?.name;
 
-  const windowDimensions = useWindowDimensions();
-  const isDesktop = windowDimensions
-    && windowDimensions.width
-    && windowDimensions.width >= 768;
+  const isDesktop = useIsDesktop();
 
   const [floors, setFloors] = useState<FloorMap>({});
 
@@ -198,6 +196,8 @@ export default function Home() {
           activeBuilding={activeBuilding}
           floorOrdinal={floorOrdinal}
           setFloorOrdinal={setFloorOrdinal}
+          isSearchOpen={isSearchOpen}
+          onSetIsSearchOpen={setIsSearchOpen}
           onSelectBuilding={(building) => {
             setFloorOrdinal(null);
             showBuilding(building, true);
@@ -229,56 +229,63 @@ export default function Home() {
           <InformationCircleIcon className={styles['info-button-icon']} />
         </button> */}
 
-        <Map
-          ref={mapRef}
-          token={process.env.NEXT_PUBLIC_MAPKITJS_TOKEN!}
-          initialRegion={initialRegion}
-          cameraBoundary={cameraBoundary}
-          maxCameraDistance={1500}
-          includedPOICategories={[
-            PointOfInterestCategory.PublicTransport,
-          ]}
-          showsMapTypeControl={false}
-          showsUserLocationControl
-          allowWheelToZoom
-          mapType={MapType.MutedStandard}
-          paddingBottom={isDesktop ? 0 : 72}
-          paddingLeft={4}
-          paddingRight={4}
-          paddingTop={10}
-          showsZoomControl={!!isDesktop}
-          showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
-          onLoad={() => {
-            zoomOnDefaultBuilding(buildings);
-          }}
-          onRegionChangeStart={onRegionChangeStart}
-          onRegionChangeEnd={onRegionChangeEnd}
+        <div
+          className={styles['map-wrapper']}
+          ref={(node) => node && (
+            (isSearchOpen && !isDesktop) ? node.setAttribute('inert', '') : node.removeAttribute('inert')
+          )}
         >
-          {buildings && buildings.map((building) => (
-            <BuildingShape
-              key={building.code}
-              building={building}
-              showName={!showFloor}
-            />
-          ))}
+          <Map
+            ref={mapRef}
+            token={process.env.NEXT_PUBLIC_MAPKITJS_TOKEN!}
+            initialRegion={initialRegion}
+            cameraBoundary={cameraBoundary}
+            maxCameraDistance={1500}
+            includedPOICategories={[
+              PointOfInterestCategory.PublicTransport,
+            ]}
+            showsMapTypeControl={false}
+            showsUserLocationControl
+            allowWheelToZoom
+            mapType={MapType.MutedStandard}
+            paddingBottom={isDesktop ? 0 : 72}
+            paddingLeft={4}
+            paddingRight={4}
+            paddingTop={10}
+            showsZoomControl={!!isDesktop}
+            showsCompass={isDesktop ? FeatureVisibility.Adaptive : FeatureVisibility.Hidden}
+            onLoad={() => {
+              zoomOnDefaultBuilding(buildings);
+            }}
+            onRegionChangeStart={onRegionChangeStart}
+            onRegionChangeEnd={onRegionChangeEnd}
+          >
+            {buildings && buildings.map((building) => (
+              <BuildingShape
+                key={building.code}
+                building={building}
+                showName={!showFloor}
+              />
+            ))}
 
-          {showFloor && buildings && buildings.flatMap((building: Building) => building
-            .floors.map((floor: Floor) => {
-              if (floor.ordinal !== floorOrdinal) return null;
+            {showFloor && buildings && buildings.flatMap((building: Building) => building
+              .floors.map((floor: Floor) => {
+                if (floor.ordinal !== floorOrdinal) return null;
 
-              const code = `${building.code}-${floor.name}`;
-              const floorPlan = floors[code];
+                const code = `${building.code}-${floor.name}`;
+                const floorPlan = floors[code];
 
-              return floorPlan && (
-                <FloorPlanOverlay
-                  key={code}
-                  floorPlan={floorPlan}
-                  showRoomNames={showRoomNames}
-                  isBackground={building.code !== activeBuilding?.code}
-                />
-              );
-            }))}
-        </Map>
+                return floorPlan && (
+                  <FloorPlanOverlay
+                    key={code}
+                    floorPlan={floorPlan}
+                    showRoomNames={showRoomNames}
+                    isBackground={building.code !== activeBuilding?.code}
+                  />
+                );
+              }))}
+          </Map>
+        </div>
       </main>
     </>
   );
