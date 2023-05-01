@@ -15,6 +15,12 @@
   justify-content: flex-end;
 }
 
+@media (prefers-reduced-motion) {
+  .toolbar {
+    transition: none;
+  }
+}
+
 .toolbar-open {
   top: 0;
   bottom: unset;
@@ -209,6 +215,12 @@
   z-index: 95;
   transform: translateY(100vh);
   transition: var(--search-transition-duration) ease-in-out transform;
+}
+
+@media (prefers-reduced-motion) {
+  .search-modal {
+    transition: none;
+  }
 }
 
 .search-modal-open {

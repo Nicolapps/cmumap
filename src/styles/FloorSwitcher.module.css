@@ -109,6 +109,12 @@
     var(--search-transition-duration) ease-in-out opacity;
 }
 
+@media (prefers-reduced-motion) {
+  .floor-switcher {
+    transition: var(--search-transition-duration) ease-in-out opacity;
+  }
+}
+
 .toolbar-open {
   opacity: 0;
   pointer-events: none;

@@ -30,6 +30,7 @@ import { isInPolygonCoordinates } from '@/geometry';
 import { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
 import { useRouter } from 'next/router';
 import Toolbar from '@/components/Toolbar';
+import prefersReducedMotion from "@/util/prefersReducedMotion";
 
 const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
 
@@ -68,7 +69,7 @@ export default function Home() {
         Math.max(...allLon),
         Math.min(...allLat),
         Math.min(...allLon),
-      ).toCoordinateRegion());
+      ).toCoordinateRegion(), !prefersReducedMotion());
 
       setShowFloor(true);
       setShowRoomNames(false);
@@ -218,7 +219,7 @@ export default function Home() {
               Math.max(...allLon),
               Math.min(...allLat),
               Math.min(...allLon),
-            ).toCoordinateRegion());
+            ).toCoordinateRegion(), !prefersReducedMotion());
 
             setShowFloor(true);
             setShowRoomNames(true);
