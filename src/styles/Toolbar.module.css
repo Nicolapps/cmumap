@@ -167,6 +167,7 @@
 
 .open-search-button:focus {
   border: 3px solid #007cff;
+  background: #e0efff;
   padding-left: calc(var(--search-icon-width) - 3px);
 }
 
