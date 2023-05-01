@@ -23,7 +23,7 @@ export interface ToolbarProps {
   onSelectBuilding: (newBuilding: Building | null) => void;
   onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
   isSearchOpen: boolean;
-  onSetIsSearchOpen: (boolean) => void;
+  onSetIsSearchOpen: (newValue: boolean) => void;
 }
 
 export default function Toolbar({
