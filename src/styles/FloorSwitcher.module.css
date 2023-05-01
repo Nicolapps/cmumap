@@ -5,7 +5,6 @@
 
 .building-name {
   display: flex;
-  display: flex;
   align-items: center;
   letter-spacing: -.02em;
   padding: 6px;
@@ -97,10 +96,6 @@
   }
 }
 
-.wrapper {
-  transition: var(--search-transition-duration) ease-in-out opacity;
-}
-
 .floor-switcher {
   display: flex;
   background: rgba(255, 255, 255, .8);
@@ -109,11 +104,31 @@
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   overflow: hidden;
   height: var(--floor-switcher-height);
+  transition:
+    var(--search-transition-duration) ease-in-out transform,
+    var(--search-transition-duration) ease-in-out opacity;
 }
 
 .toolbar-open {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Desktop layout */
+@media screen and (min-width: 768px) {
+  .toolbar-open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(calc(
+      (var(--search-width-desktop) - var(--main-ui-padding)) / 2
+    ));
+  }
+}
+
+@media screen and (min-width: 1220px) {
+  .toolbar-open {
+    transform: none;
+  }
 }
 
 .no-floor {

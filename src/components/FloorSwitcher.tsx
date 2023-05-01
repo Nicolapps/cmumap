@@ -7,6 +7,7 @@ import {
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import styles from '@/styles/FloorSwitcher.module.css';
 import clsx from 'clsx';
+import { useIsDesktop } from '@/hooks/useWindowDimensions';
 import Roundel from './Roundel';
 
 interface FloorSwitcherProps {
@@ -68,14 +69,21 @@ export default function FloorSwitcher({
 
   const floorPickerRef = useRef<HTMLDivElement | null>(null);
 
+  const isDesktop = useIsDesktop();
+
   return (
     <div
-      className={clsx(styles.wrapper, isToolbarOpen && styles['toolbar-open'])}
+      className={clsx(styles.wrapper)}
       ref={(node) => node && (
-        isToolbarOpen ? node.setAttribute('inert', '') : node.removeAttribute('inert')
+        (isToolbarOpen && !isDesktop) ? node.setAttribute('inert', '') : node.removeAttribute('inert')
       )}
     >
-      <div className={styles['floor-switcher']}>
+      <div
+        className={clsx(
+          styles['floor-switcher'],
+          isToolbarOpen && styles['toolbar-open'],
+        )}
+      >
         <div className={styles['building-roundel-wrapper']}>
           <Roundel code={building.code} />
         </div>
