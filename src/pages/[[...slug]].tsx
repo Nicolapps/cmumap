@@ -192,6 +192,7 @@ export default function Home() {
         <meta name="description" content="Interactive map of the CMU campus" />
       </Head>
       <main className={styles.main}>
+        <h1 className="visually-hidden">CMU Map</h1>
         <Toolbar
           buildings={buildings}
           floorMap={floors}
