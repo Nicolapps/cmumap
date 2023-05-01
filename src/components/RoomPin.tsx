@@ -1,6 +1,7 @@
 import React from 'react';
 import { Room, getRoomTypeDetails } from '@/types';
 import clsx from 'clsx';
+import titleCase from '@/util/titleCase';
 import styles from '../styles/RoomPin.module.css';
 
 const icons: { [type: string]: string } = {
@@ -40,6 +41,7 @@ export default function RoomPin({ room }: RoomPinProps) {
         showIcon && styles['pin-with-icon'],
       )}
       style={{ background: roomColors.primary }}
+      title={titleCase(room.type)}
     >
       {showIcon && (
         <svg xmlns="http://www.w3.org/2000/svg" id="elevator" width="15" height="15" viewBox="0 0 15 15">

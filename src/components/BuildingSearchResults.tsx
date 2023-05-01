@@ -9,14 +9,9 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import styles from '@/styles/BuildingSearchResults.module.css';
 import clsx from 'clsx';
 import simplify from '@/util/simplify';
-import RoomPin from './RoomPin';
+import titleCase from '@/util/titleCase';
 import Roundel from './Roundel';
-
-function titleCase(str: string) {
-  return str.split(' ')
-    .map((word: string) => word.substring(0, 1).toUpperCase() + word.substring(1))
-    .join(' ');
-}
+import RoomPin from './RoomPin';
 
 function roomType(room: Room): string {
   switch (room.type) {
