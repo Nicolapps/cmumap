@@ -30,7 +30,7 @@ import { isInPolygonCoordinates } from '@/geometry';
 import { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
 import { useRouter } from 'next/router';
 import Toolbar from '@/components/Toolbar';
-import prefersReducedMotion from "@/util/prefersReducedMotion";
+import prefersReducedMotion from 'r@/util/prefersReducedMotion';
 
 const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
 
