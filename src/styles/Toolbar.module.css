@@ -138,7 +138,7 @@
   z-index: 100;
 }
 
-.search-close-button:focus {
+.search-close-button:focus-visible {
   border: 3px solid #007cff;
 }
 
@@ -171,7 +171,7 @@
   border-radius: 8px;
 }
 
-.open-search-button:focus {
+.open-search-button:focus-visible {
   border: 3px solid #007cff;
   background: #e0efff;
   padding-left: calc(var(--search-icon-width) - 3px);
