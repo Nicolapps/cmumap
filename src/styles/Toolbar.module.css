@@ -110,7 +110,7 @@
 .search-icon {
   width: 24px;
   height: 24px;
-  fill: #a9a9a9;
+  fill: #767575;
 }
 
 .search-close-button {
@@ -170,9 +170,11 @@
   padding-left: calc(var(--search-icon-width) - 3px);
 }
 
-.placeholder {
-  color: #a9a9a9;
-}
+.placeholder { color: #767575; }
+.search-box-input::-webkit-input-placeholder { color: #767575; }
+.search-box-input:-moz-placeholder { color: #767575; }
+.search-box-input::-moz-placeholder { color: #767575; }
+.search-box-input:-ms-input-placeholder { color: #767575; }
 
 .search-modal-background {
   position: absolute;
