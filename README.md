@@ -2,11 +2,11 @@
 
 CMU Map is a map of the Carnegie Mellon University campus that includes floor plans.
 
-This project was created as part of the 
+This project was created as part of the [Programming Usable Interfaces](https://cmucourses.com/course/05-430) class.
 
-* ![Deployed website](https://cmumap.com)
-* ![Demo video](https://drive.google.com/file/d/1x_q52KOLjAtRPedbTBAPV6XU0x4CXCZt/view?usp=sharing)
-* ![Final project write-up](write-up.pdf)
+* [Deployed website](https://cmumap.com)
+* [Demo video](https://drive.google.com/file/d/1x_q52KOLjAtRPedbTBAPV6XU0x4CXCZt/view?usp=sharing)
+* [Final project write-up](write-up.pdf)
 
 
 ## Run locally
