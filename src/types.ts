@@ -219,7 +219,7 @@ export interface Building {
    * The ID of the OpenStreetMap way that corresponds to the building.
    */
   osmId: string;
-  
+
   /**
    * The floors in the building.
    */
