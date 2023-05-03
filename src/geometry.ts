@@ -1,3 +1,7 @@
+/**
+ * Contains a few functions useful to do geometry computations.
+ */
+
 import { Coordinate } from 'mapkit-react';
 import { AbsoluteCoordinate } from './types';
 
@@ -15,11 +19,22 @@ export function mapDistance(a: Coordinate, b: Coordinate) {
   return Math.sqrt(squareSum);
 }
 
+/**
+ * Returns the distance between two absolute coordinates.
+ */
 export function distance(a: AbsoluteCoordinate, b: AbsoluteCoordinate) {
   const squareSum = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
   return Math.sqrt(squareSum);
 }
 
+/**
+ * Determines whether there is an overlap between two rectangles
+ * @param aTopLeft The top left corner of the first rectangle
+ * @param aBottomRight The bottom right corner of the first reactangle
+ * @param bTopLeft The top left corner of the second rectangle
+ * @param bBottomRight The bottom right corner of the second reactangle
+ * @returns true if there is an overlap; false otherwise
+ */
 export function hasOverlap(
   aTopLeft: AbsoluteCoordinate,
   aBottomRight: AbsoluteCoordinate,
@@ -39,11 +54,25 @@ export function hasOverlap(
   return true;
 }
 
+/**
+ * Determines whether two ranges of numbers overlap
+ * @param aMin The minimum value of the first range
+ * @param aMax The maximum value of the first range
+ * @param bMin The minimum value of the first range
+ * @param bMax The maximum value of the first range
+ * @returns true if there is an overlap; false otherwise
+ */
 export function rangeOverlap(aMin: number, aMax: number, bMin: number, bMax: number) {
   return bMin < aMin ? bMax > aMin : bMin < aMax;
 }
 
-// Based on https://stackoverflow.com/a/29915728/4652564
+/**
+ * Determines whether a point is in a polygon
+ * Based on https://stackoverflow.com/a/29915728/4652564
+ * @param vertices The vertices of the polygon
+ * @param point The point
+ * @returns true if the point is in the polygon; false otherwise
+ */
 export function isInPolygon(vertices: AbsoluteCoordinate[], point: AbsoluteCoordinate) {
   const { x, y } = point;
 
@@ -62,6 +91,14 @@ export function isInPolygon(vertices: AbsoluteCoordinate[], point: AbsoluteCoord
   return inside;
 }
 
+/**
+ * Determines whether a point is in a polygon
+ * (Assumes Euclidian geometry)
+ * Based on https://stackoverflow.com/a/29915728/4652564
+ * @param vertices The vertices of the polygon
+ * @param point The point
+ * @returns true if the point is in the polygon; false otherwise
+ */
 export function isInPolygonCoordinates(vertices: Coordinate[], point: Coordinate) {
   const x = point.longitude;
   const y = point.latitude;
@@ -90,7 +127,14 @@ export function angleBetween(center: Coordinate, point: Coordinate) {
   return (Math.atan2(latitudeDiff, longitudeDiff) * 180) / Math.PI;
 }
 
-// Based on https://stackoverflow.com/a/17411276/4652564
+/**
+ * Computes the rotation of a point around the origin.
+ * Based on https://stackoverflow.com/a/17411276/4652564
+ * @param x The x coordinate of the point
+ * @param y The y coordinate of the point
+ * @param angle The angle in degrees
+ * @returns [rotatedX, rotatedY]
+ */
 export function rotate(x: number, y: number, angle: number): number[] {
   const radians = (Math.PI / 180) * angle;
   const cos = Math.cos(radians);

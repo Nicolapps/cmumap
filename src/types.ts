@@ -1,10 +1,20 @@
+/**
+ * Contains TypeScript type definitions used in the project.
+ */
+
 import { Coordinate } from 'mapkit-react';
 
+/**
+ * An absolute coordinate.
+ */
 export interface AbsoluteCoordinate {
   x: number;
   y: number;
 }
 
+/**
+ * Room types
+ */
 export type RoomType =
   'default'
   | 'corridor'
@@ -30,15 +40,33 @@ export type RoomType =
   | 'sport'
   | 'parking';
 
+/**
+ * The attributes of a room type.
+ */
 interface RoomTypeDetails {
+  /**
+   * A CSS color used for the marker of the room
+   */
   primary: string;
+
+  /**
+   * A CSS color used for the background of the room’s shape
+   */
   background: string;
+
+  /**
+   * A CSS color used for the border of the room’s shape
+   */
   border: string;
 }
 
+/**
+ * Returns the attributes of a room type
+ * @param type The type of the room
+ * @returns See RoomTypeDetails
+ */
 export function getRoomTypeDetails(type: RoomType): RoomTypeDetails {
   switch (type) {
-    // @TODO Improve the background/border colors
     case 'default':
       return { primary: '#b5b3b2', background: '#eeeeee', border: '#cccccc' };
     case 'corridor':
@@ -81,12 +109,18 @@ export function getRoomTypeDetails(type: RoomType): RoomTypeDetails {
   }
 }
 
+/**
+ * A room.
+ */
 export interface Room {
   /**
    * Unique ID (UUID)
    */
   id: string;
 
+  /**
+   * The shapes that the room consists of.
+   */
   shapes: AbsoluteCoordinate[][];
 
   /**
@@ -110,8 +144,14 @@ export interface Room {
    */
   alias?: string;
 
+  /**
+   * The type of the room
+   */
   type: RoomType;
 
+  /**
+   * The position of the room's label
+   */
   labelPosition?: AbsoluteCoordinate;
 
   /**
@@ -145,48 +185,80 @@ export interface Placement {
   angle: number;
 }
 
+/**
+ * A floor in a building.
+ */
 export interface Floor {
   name: string;
   ordinal: number;
 }
 
+/**
+ * Details about a specific building floor.
+ */
 export interface FloorPlan {
   placement: Placement;
   rooms: Room[];
 }
 
+/**
+ * The details of a building.
+ */
 export interface Building {
+  /**
+   * The code of the building (e.g. 'WEH')
+   */
   code: string;
+
+  /**
+   * The name of the buliding (e.g. 'Wean Hall')
+   */
   name: string;
+
+  /**
+   * The ID of the OpenStreetMap way that corresponds to the building.
+   */
   osmId: string;
+  
+  /**
+   * The floors in the building.
+   */
   floors: Floor[];
+
+  /**
+   * The name of the floor displayed by default for this building.
+   */
   defaultFloor: string;
+
+  /**
+   * The position of the label for the building's code.
+   */
   labelPosition: Coordinate;
+
+  /**
+   * The shapes that the building consists of.
+   */
   shapes: Coordinate[][];
+
+  /**
+   * A comment (for internal usage only).
+   */
   comment?: string;
+
+  /**
+   * The zone in which the building is considered to be the primary building.
+   */
   hitbox: Coordinate[] | null;
 }
 
-export interface TextZone {
-  center: AbsoluteCoordinate;
-  text: string;
-}
-
-export interface SVGPathCommand {
-  command: string;
-  x: number;
-  y: number;
-  x0: number;
-  y0: number;
-  largeArc?: boolean;
-  sweep?: boolean;
-  rx?: number;
-  ry?: number;
-  xAxisRotation?: number;
-}
-
+/**
+ * A map from floor identifiers (e.g. 'WEH-4') to floor plans.
+ */
 export type FloorMap = { [code: string]: FloorPlan };
 
+/**
+ * The structure of the export file containing the CMU Map data.
+ */
 export interface Export {
   buildings: Building[];
   floors: FloorMap;

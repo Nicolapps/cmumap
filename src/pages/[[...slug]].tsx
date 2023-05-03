@@ -23,8 +23,6 @@ import BuildingShape from '@/components/BuildingShape';
 import FloorPlanOverlay, { getFloorCenter, positionOnMap } from '@/components/FloorPlanOverlay';
 import { useIsDesktop } from '@/hooks/useWindowDimensions';
 
-// import { InformationCircleIcon } from '@heroicons/react/24/solid';
-
 import useMapPosition from '@/hooks/useMapPosition';
 import { isInPolygonCoordinates } from '@/geometry';
 import { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
@@ -32,8 +30,14 @@ import { useRouter } from 'next/router';
 import Toolbar from '@/components/Toolbar';
 import prefersReducedMotion from '@/util/prefersReducedMotion';
 
+/**
+ * The JSON file at this address contains all the map data used by the project.
+ */
 const exportFile = 'https://nicolapps.github.io/cmumap-data-mirror/export.json';
 
+/**
+ * The main page of the CMU Map website.
+ */
 export default function Home() {
   const router = useRouter();
   const mapRef = useRef<mapkit.Map | null>(null);
@@ -150,6 +154,7 @@ export default function Home() {
     longitudeDelta: 0.014410141520116326,
   }), []);
 
+  // React to pan/zoom events
   const { onRegionChangeStart, onRegionChangeEnd } = useMapPosition((region, density) => {
     if (!buildings) return;
 
@@ -174,6 +179,7 @@ export default function Home() {
     }
   }, mapRef, initialRegion);
 
+  // Compute the current page title
   let title = '';
   if (activeBuilding) {
     title += activeBuilding.name;
@@ -227,10 +233,6 @@ export default function Home() {
             setShowRoomNames(true);
           }}
         />
-
-        {/* <button className={styles['info-button']} type="button" title="Help">
-          <InformationCircleIcon className={styles['info-button-icon']} />
-        </button> */}
 
         <div
           className={styles['map-wrapper']}
@@ -294,9 +296,9 @@ export default function Home() {
   );
 }
 
-// Disable SSR
+// Disable Next.js server-side rendering
 export async function getServerSideProps() {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {},
   };
 }
