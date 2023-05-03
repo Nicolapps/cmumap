@@ -112,6 +112,7 @@ export default function Toolbar({
           }}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
+          title="Search query"
         />
       )}
 
