@@ -17,6 +17,9 @@ export interface SearchResultsProps {
   onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
 }
 
+/**
+ * Displays the search results.
+ */
 export default function SearchResults({
   query,
   buildings,

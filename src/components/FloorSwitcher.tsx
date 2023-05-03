@@ -38,6 +38,10 @@ export function getFloorIndexAtOrdinal(building: Building, ordinal: number): num
   return ~min;
 }
 
+/**
+ * The interface component allowing an user to see the current building
+ * and switch floors.
+ */
 export default function FloorSwitcher({
   building,
   ordinal,

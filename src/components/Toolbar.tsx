@@ -26,6 +26,9 @@ export interface ToolbarProps {
   onSetIsSearchOpen: (newValue: boolean) => void;
 }
 
+/**
+ * Contains the floor switcher, the search bar and the search results.
+ */
 export default function Toolbar({
   buildings,
   floorMap,

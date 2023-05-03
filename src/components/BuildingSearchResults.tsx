@@ -32,6 +32,9 @@ export interface BuildingSearchResultsProps {
 
 type RoomWithOrdinal = Room & { floor: Floor };
 
+/**
+ * Displays the search results for a specific building.
+ */
 export default function BuildingSearchResults({
   simplifiedQuery,
   building,

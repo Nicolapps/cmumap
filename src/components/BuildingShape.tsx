@@ -9,6 +9,9 @@ interface BuildingShapeProps {
   showName?: boolean;
 }
 
+/**
+ * The shape of a building on the map.
+ */
 export default function BuildingShape({
   building,
   showName = false,

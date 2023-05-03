@@ -51,6 +51,9 @@ interface FloorPlanOverlayProps {
   isBackground: boolean;
 }
 
+/**
+ * The contents of a floor displayed on the map.
+ */
 export default function FloorPlanOverlay({
   floorPlan,
   showRoomNames,

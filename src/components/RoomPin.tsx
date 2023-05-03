@@ -28,6 +28,10 @@ export function hasIcon(room: Room) {
   return room.type in icons;
 }
 
+/**
+ * The marker displayed for identifying the type of a room.
+ * Visible on the map and in the search results.
+ */
 export default function RoomPin({ room }: RoomPinProps) {
   const icon = icons[room.type] ?? null;
   const showIcon = icon !== null;
