@@ -11,6 +11,13 @@ export interface UseMapPositionHandlers {
 const UPDATE_PERIOD_MS = 150;
 const MAX_UPDATE_TIME_MS = 5000;
 
+/**
+ * Hook that can be used to know when the map's panning position/zoom changes
+ * @param callback Function called on a change
+ * @param mapRef The reference to the MapKit JS map object
+ * @param initialRegion The initial region of the map
+ * @returns Handlers that need to be added to the map.
+ */
 export default function useMapPosition(
   callback: (region: CoordinateRegion, density: number) => void,
   mapRef: MutableRefObject<mapkit.Map | null>,
