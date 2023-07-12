@@ -30,12 +30,8 @@ export default internalAction({
             placement,
             hasFloorPlan: placement !== null,
           },
+          rooms: floors[`${building.code}-${name}`]?.rooms ?? [],
         });
-
-        const rooms = floors[`${building.code}-${name}`]?.rooms ?? [];
-        for (const room of rooms) {
-          await runMutation(internal.importData.addRoom, { room });
-        }
       }
     }
   },
@@ -49,15 +45,11 @@ export const addBuilding = internalMutation({
 });
 
 export const addFloor = internalMutation({
-  args: { floor: v.any() },
-  handler: async ({ db }, { floor }) => {
+  args: { floor: v.any(), rooms: v.array(v.any()) },
+  handler: async ({ db }, { floor, rooms }) => {
     await db.insert('floors', floor);
-  },
-});
-
-export const addRoom = internalMutation({
-  args: { room: v.any() },
-  handler: async ({ db }, { room }) => {
-    await db.insert('rooms', room);
+    for (const room of rooms) {
+      await db.insert('rooms', room);
+    }
   },
 });
