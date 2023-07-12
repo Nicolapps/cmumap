@@ -27,7 +27,7 @@ export default internalAction({
       i += 1;
       console.log(`[${i}/${buildings.length}] ${building.name}`);
 
-      const buildingId = await runMutation(internal.importData.addBuilding, {
+      await runMutation(internal.importData.addBuilding, {
         building: {
           ...building,
           hitbox: encodeShape(building.hitbox),
@@ -40,7 +40,7 @@ export default internalAction({
         const placement = floors[`${building.code}-${name}`]?.placement ?? null;
         await runMutation(internal.importData.addFloor, {
           floor: {
-            buildingId,
+            building: building.code,
             name,
             ordinal,
             placement,
@@ -55,17 +55,18 @@ export default internalAction({
 
 export const addBuilding = internalMutation({
   args: { building: v.any() },
-  handler: async ({ db }, { building }) => {
-    await db.insert('buildings', building);
-  },
+  handler: async ({ db }, { building }) => db.insert('buildings', building),
 });
 
 export const addFloor = internalMutation({
   args: { floor: v.any(), rooms: v.array(v.any()) },
   handler: async ({ db }, { floor, rooms }) => {
-    await db.insert('floors', floor);
+    const floorId = await db.insert('floors', floor);
     for (const room of rooms) {
-      await db.insert('rooms', room);
+      await db.insert('rooms', {
+        ...room,
+        floorId,
+      });
     }
   },
 });
