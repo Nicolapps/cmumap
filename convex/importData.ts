@@ -18,7 +18,9 @@ export default internalAction({
       i += 1;
       console.log(`[${i}/${buildings.length}] ${building.name}`);
 
-      const buildingId = await runMutation(internal.importData.addBuilding, { building });
+      const buildingId = await runMutation(internal.importData.addBuilding, {
+        building: { ...building, floors: undefined },
+      });
 
       for (const { name, ordinal } of building.floors) {
         const placement = floors[`${building.code}-${name}`]?.placement ?? null;
