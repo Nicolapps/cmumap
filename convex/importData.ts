@@ -2,14 +2,10 @@
 
 import { v } from 'convex/values';
 // import cliProgress from 'cli-progress';
-import { api, internal } from './_generated/api.js';
+import { internal } from './_generated/api';
 import {
-  action,
   internalAction,
   internalMutation,
-  internalQuery,
-  mutation,
-  query,
 } from './_generated/server';
 
 export default internalAction({
@@ -47,19 +43,21 @@ export default internalAction({
 
 export const addBuilding = internalMutation({
   args: { building: v.any() },
-  handler: async ({ db }, { building }) => db.insert('buildings', building),
+  handler: async ({ db }, { building }) => {
+    await db.insert('buildings', building);
+  },
 });
 
 export const addFloor = internalMutation({
   args: { floor: v.any() },
   handler: async ({ db }, { floor }) => {
-    db.insert('floors', floor);
+    await db.insert('floors', floor);
   },
 });
 
 export const addRoom = internalMutation({
   args: { room: v.any() },
   handler: async ({ db }, { room }) => {
-    db.insert('rooms', room);
+    await db.insert('rooms', room);
   },
 });
