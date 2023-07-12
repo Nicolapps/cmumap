@@ -8,6 +8,15 @@ import {
   internalMutation,
 } from './_generated/server';
 
+function encodeShape(points: { latitude: number, longitude: number }[]): ArrayBuffer {
+  const array = new Float64Array(points.length * 2);
+  for (let i = 0; i < points.length; i += 1) {
+    array[2 * i] = points[i].longitude;
+    array[2 * i + 1] = points[i].latitude;
+  }
+  return array.buffer;
+}
+
 export default internalAction({
   args: {},
   handler: async ({ runMutation }) => {
@@ -19,7 +28,12 @@ export default internalAction({
       console.log(`[${i}/${buildings.length}] ${building.name}`);
 
       const buildingId = await runMutation(internal.importData.addBuilding, {
-        building: { ...building, floors: undefined },
+        building: {
+          ...building,
+          hitbox: encodeShape(building.hitbox),
+          shapes: building.shapes.map(encodeShape),
+          floors: undefined,
+        },
       });
 
       for (const { name, ordinal } of building.floors) {
