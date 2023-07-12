@@ -10,7 +10,7 @@ export default query(async ({ db }) => {
   return (await db.query('buildings').collect()).map((building) => ({
     ...building,
     floors: (floorsByBuilding[building.code] ?? [])
-      .sort((a, b) => b.ordinal - a.ordinal)
+      .sort((a, b) => a.ordinal - b.ordinal)
       .map(({
         _id, name, ordinal, hasFloorPlan,
       }) => ({
