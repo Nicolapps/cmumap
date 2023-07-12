@@ -25,12 +25,13 @@ function roomType(room: Room): string {
 export interface BuildingSearchResultsProps {
   simplifiedQuery: string;
   building: Building;
-  floorMap: FloorMap;
   onSelectBuilding: (selectedBuilding: Building) => void;
   onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
 }
 
 type RoomWithOrdinal = Room & { floor: Floor };
+
+const floorMap = {} as FloorMap; // @TODO Temp, reimplement later
 
 /**
  * Displays the search results for a specific building.
@@ -38,7 +39,6 @@ type RoomWithOrdinal = Room & { floor: Floor };
 export default function BuildingSearchResults({
   simplifiedQuery,
   building,
-  floorMap,
   onSelectBuilding,
   onSelectRoom,
 }: BuildingSearchResultsProps) {

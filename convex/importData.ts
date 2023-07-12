@@ -30,8 +30,8 @@ export default internalAction({
       await runMutation(internal.importData.addBuilding, {
         building: {
           ...building,
-          hitbox: encodeShape(building.hitbox),
-          shapes: building.shapes.map(encodeShape),
+          // hitbox: encodeShape(building.hitbox),
+          // shapes: building.shapes.map(encodeShape),
           floors: undefined,
         },
       });

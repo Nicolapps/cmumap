@@ -29,6 +29,8 @@ import { getFloorIndexAtOrdinal } from '@/components/FloorSwitcher';
 import { useRouter } from 'next/router';
 import Toolbar from '@/components/Toolbar';
 import prefersReducedMotion from '@/util/prefersReducedMotion';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
 /**
  * The JSON file at this address contains all the map data used by the project.
@@ -42,7 +44,7 @@ export default function Home() {
   const router = useRouter();
   const mapRef = useRef<mapkit.Map | null>(null);
 
-  const [buildings, setBuildings] = useState<Building[] | null>(null);
+  const buildings: Building[] | undefined = useQuery(api.buildings.default);
 
   const [showFloor, setShowFloor] = useState(false);
   const [showRoomNames, setShowRoomNames] = useState(false);
@@ -54,8 +56,6 @@ export default function Home() {
     ?.floors[getFloorIndexAtOrdinal(activeBuilding, floorOrdinal)]?.name;
 
   const isDesktop = useIsDesktop();
-
-  const [floors, setFloors] = useState<FloorMap>({});
 
   const showBuilding = (newBuilding: Building | null, updateMap: boolean) => {
     setActiveBuilding(newBuilding);
@@ -88,13 +88,13 @@ export default function Home() {
     ));
   };
 
-  const zoomOnDefaultBuilding = (newBuildings: Building[] | null) => {
+  const zoomOnDefaultBuilding = () => {
     // Make sure that both buildings and the map are loaded
-    if (!newBuildings || !mapRef.current) return;
+    if (!buildings || !mapRef.current) return;
 
     // Handle the URL
     const [buildingCode, floorName] = (router.query?.slug?.[0] ?? '').toUpperCase().split('-');
-    const building = buildingCode && newBuildings.find((b) => b.code === buildingCode)!;
+    const building = buildingCode && buildings.find((b) => b.code === buildingCode)!;
     if (building) {
       showBuilding(building, true);
 
@@ -108,18 +108,10 @@ export default function Home() {
     }
   };
 
-  // Load the data from the API
   useEffect(() => {
-    fetch(exportFile)
-      .then((r) => r.json())
-      .then((response: Export) => {
-        setBuildings(response.buildings);
-        setFloors(response.floors);
-
-        zoomOnDefaultBuilding(response.buildings);
-      });
+    zoomOnDefaultBuilding();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [buildings]);
 
   // Update the URL from the current floor
   useEffect(() => {
@@ -200,8 +192,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className="visually-hidden">CMU Map</h1>
         <Toolbar
-          buildings={buildings}
-          floorMap={floors}
+          buildings={buildings ?? null}
           activeBuilding={activeBuilding}
           floorOrdinal={floorOrdinal}
           setFloorOrdinal={setFloorOrdinal}
@@ -211,26 +202,28 @@ export default function Home() {
             setFloorOrdinal(null);
             showBuilding(building, true);
           }}
-          onSelectRoom={(room, building, floor) => {
-            setFloorOrdinal(floor.ordinal);
-            setActiveBuilding(building);
+          onSelectRoom={() => { // (room, building, floor) => {
+            // @TODO Restore
 
-            const { placement, rooms } = floors[`${building.code}-${floor.name}`]!;
-            const center = getFloorCenter(rooms);
-            const points: Coordinate[] = room.shapes.flat()
-              .map((point: AbsoluteCoordinate) => positionOnMap(point, placement, center));
-            const allLat = points.map((p) => p.latitude);
-            const allLon = points.map((p) => p.longitude);
+            // setFloorOrdinal(floor.ordinal);
+            // setActiveBuilding(building);
 
-            mapRef.current?.setRegionAnimated(new mapkit.BoundingRegion(
-              Math.max(...allLat),
-              Math.max(...allLon),
-              Math.min(...allLat),
-              Math.min(...allLon),
-            ).toCoordinateRegion(), !prefersReducedMotion());
+            // const { placement, rooms } = floors[`${building.code}-${floor.name}`]!;
+            // const center = getFloorCenter(rooms);
+            // const points: Coordinate[] = room.shapes.flat()
+            //   .map((point: AbsoluteCoordinate) => positionOnMap(point, placement, center));
+            // const allLat = points.map((p) => p.latitude);
+            // const allLon = points.map((p) => p.longitude);
 
-            setShowFloor(true);
-            setShowRoomNames(true);
+            // mapRef.current?.setRegionAnimated(new mapkit.BoundingRegion(
+            //   Math.max(...allLat),
+            //   Math.max(...allLon),
+            //   Math.min(...allLat),
+            //   Math.min(...allLon),
+            // ).toCoordinateRegion(), !prefersReducedMotion());
+
+            // setShowFloor(true);
+            // setShowRoomNames(true);
           }}
         />
 
@@ -277,13 +270,10 @@ export default function Home() {
               .floors.map((floor: Floor) => {
                 if (floor.ordinal !== floorOrdinal) return null;
 
-                const code = `${building.code}-${floor.name}`;
-                const floorPlan = floors[code];
-
-                return floorPlan && (
+                return floor.id && (
                   <FloorPlanOverlay
-                    key={code}
-                    floorPlan={floorPlan}
+                    key={floor.id}
+                    id={floor.id}
                     showRoomNames={showRoomNames}
                     isBackground={building.code !== activeBuilding?.code}
                   />

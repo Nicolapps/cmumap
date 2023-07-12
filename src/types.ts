@@ -3,6 +3,7 @@
  */
 
 import { Coordinate } from 'mapkit-react';
+import { Id } from '../convex/_generated/dataModel';
 
 /**
  * An absolute coordinate.
@@ -189,6 +190,7 @@ export interface Placement {
  * A floor in a building.
  */
 export interface Floor {
+  id: Id<'floors'> | null;
   name: string;
   ordinal: number;
 }
@@ -218,7 +220,7 @@ export interface Building {
   /**
    * The ID of the OpenStreetMap way that corresponds to the building.
    */
-  osmId: string;
+  osmId: string | null;
 
   /**
    * The floors in the building.

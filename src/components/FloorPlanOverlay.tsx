@@ -7,8 +7,11 @@ import {
 } from 'mapkit-react';
 import React, { useMemo } from 'react';
 import clsx from 'clsx';
+import { useQuery } from 'convex/react';
 import styles from '../styles/FloorPlanOverlay.module.css';
 import RoomPin, { hasIcon } from './RoomPin';
+import { api } from '../../convex/_generated/api';
+import { Id } from '../../convex/_generated/dataModel';
 
 export function getFloorCenter(rooms: Room[]): AbsoluteCoordinate | undefined {
   if (!rooms) return undefined;
@@ -45,20 +48,15 @@ export function positionOnMap(
   };
 }
 
-interface FloorPlanOverlayProps {
-  floorPlan: FloorPlan;
-  showRoomNames: boolean;
-  isBackground: boolean;
-}
-
-/**
- * The contents of a floor displayed on the map.
- */
-export default function FloorPlanOverlay({
+function FloorPlanOverlayContents({
   floorPlan,
   showRoomNames,
   isBackground,
-}: FloorPlanOverlayProps) {
+}: {
+  floorPlan: FloorPlan;
+  showRoomNames: boolean;
+  isBackground: boolean;
+}) {
   const { rooms, placement } = floorPlan;
 
   // Compute the center position of the bounding box of the current floor
@@ -133,5 +131,31 @@ export default function FloorPlanOverlay({
         );
       })}
     </>
+  );
+}
+
+/**
+ * The contents of a floor displayed on the map.
+ */
+export default function FloorPlanOverlay({
+  id,
+  showRoomNames,
+  isBackground,
+}: {
+  id: Id<'floors'>;
+  showRoomNames: boolean;
+  isBackground: boolean;
+}) {
+  const floorPlan: FloorPlan | undefined = useQuery(api.floor.default, { id });
+  if (floorPlan === undefined) {
+    return null;
+  }
+
+  return (
+    <FloorPlanOverlayContents
+      floorPlan={floorPlan}
+      showRoomNames={showRoomNames}
+      isBackground={isBackground}
+    />
   );
 }

@@ -7,7 +7,6 @@ import FloorSwitcher from '@/components/FloorSwitcher';
 import {
   Building,
   Floor,
-  FloorMap,
   Room,
 } from '@/types';
 import clsx from 'clsx';
@@ -16,7 +15,6 @@ import SearchResults from './SearchResults';
 
 export interface ToolbarProps {
   buildings: Building[] | null;
-  floorMap: FloorMap;
   activeBuilding: Building | null;
   floorOrdinal: number | null;
   setFloorOrdinal: (newOrdinal: number | null) => void;
@@ -31,7 +29,6 @@ export interface ToolbarProps {
  */
 export default function Toolbar({
   buildings,
-  floorMap,
   activeBuilding,
   floorOrdinal,
   setFloorOrdinal,
@@ -142,7 +139,6 @@ export default function Toolbar({
               <SearchResults
                 query={searchQuery}
                 buildings={buildings}
-                floorMap={floorMap}
                 onSelectBuilding={(building: Building) => {
                   onSelectBuilding(building);
                   onSetIsSearchOpen(false);

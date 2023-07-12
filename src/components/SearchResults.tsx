@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import {
   Building,
   Floor,
-  FloorMap,
   Room,
 } from '@/types';
 import styles from '@/styles/SearchResults.module.css';
@@ -12,7 +11,6 @@ import BuildingSearchResults from './BuildingSearchResults';
 export interface SearchResultsProps {
   query: string;
   buildings: Building[];
-  floorMap: FloorMap;
   onSelectBuilding: (selectedBuilding: Building) => void;
   onSelectRoom: (selectedRoom: Room, building: Building, floor: Floor) => void;
 }
@@ -23,7 +21,6 @@ export interface SearchResultsProps {
 export default function SearchResults({
   query,
   buildings,
-  floorMap,
   onSelectBuilding,
   onSelectRoom,
 }: SearchResultsProps) {
@@ -35,7 +32,6 @@ export default function SearchResults({
         <BuildingSearchResults
           simplifiedQuery={simplifiedQuery}
           building={building}
-          floorMap={floorMap}
           onSelectBuilding={onSelectBuilding}
           onSelectRoom={onSelectRoom}
           key={building.code}
