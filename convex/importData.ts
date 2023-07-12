@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 
 import { v } from 'convex/values';
+// import cliProgress from 'cli-progress';
 import { api, internal } from './_generated/api.js';
 import {
   action,
@@ -16,14 +17,18 @@ export default internalAction({
   handler: async ({ runMutation }) => {
     const { buildings, floors } = await fetch('https://nicolapps.github.io/cmumap-data-mirror/export.json').then((r) => r.json());
 
+    let i = 0;
     for (const building of buildings) {
-      await runMutation(internal.importData.addBuilding, { building });
+      i += 1;
+      console.log(`[${i}/${buildings.length}] ${building.name}`);
+
+      const buildingId = await runMutation(internal.importData.addBuilding, { building });
 
       for (const { name, ordinal } of building.floors) {
         const placement = floors[`${building.code}-${name}`]?.placement ?? null;
         await runMutation(internal.importData.addFloor, {
           floor: {
-            building: building.code,
+            buildingId,
             name,
             ordinal,
             placement,
@@ -42,9 +47,7 @@ export default internalAction({
 
 export const addBuilding = internalMutation({
   args: { building: v.any() },
-  handler: async ({ db }, { building }) => {
-    db.insert('buildings', building);
-  },
+  handler: async ({ db }, { building }) => db.insert('buildings', building),
 });
 
 export const addFloor = internalMutation({
